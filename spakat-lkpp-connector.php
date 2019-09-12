@@ -89,7 +89,7 @@ function create_lkpp_category_taxonomy() {
         'public'                     => true,
         'show_ui'                    => false,
         'show_admin_column'          => false,
-        'show_in_nav_menus'          => true,
+        'show_in_nav_menus'          => false,
         'show_tagcloud'              => true,
     );
 
@@ -133,7 +133,7 @@ function create_lkpp_brand_taxonomy() {
         'public'                     => true,
         'show_ui'                    => false,
         'show_admin_column'          => false,
-        'show_in_nav_menus'          => true,
+        'show_in_nav_menus'          => false,
         'show_tagcloud'              => true,
     );
 
