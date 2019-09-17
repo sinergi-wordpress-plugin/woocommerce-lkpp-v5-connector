@@ -65,8 +65,8 @@ class WooCommerce_Lkpp_Connector {
         self::$base_path        = plugin_dir_path( __FILE__ );
         self::$includes_path    = trailingslashit( self::$base_path ) . 'includes';
 
-        self::$default_statuses = $this->get_default_statuses();
-        self::$providers        = self::get_providers();
+        //self::$default_statuses = $this->get_default_statuses();
+        //self::$providers        = self::get_providers();
 
         // form builder tips
         /*self::$tips   = apply_filters( 'wc_warranty_form_builder_tips', array(
@@ -80,9 +80,9 @@ class WooCommerce_Lkpp_Connector {
 
         $this->include_files();
 
-        if ( !is_admin() ) {
+        /*if ( !is_admin() ) {
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
-        }
+        }*/
 
         //add_action( 'init', array( $this, 'init' ) );
         add_action( 'init', 'create_lkpp_category_taxonomy', 0 );
