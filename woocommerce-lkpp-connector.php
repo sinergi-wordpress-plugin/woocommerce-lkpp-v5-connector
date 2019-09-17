@@ -8,14 +8,14 @@
  * that starts the plugin.
  *
  * @link              https://github.com/sinergi-wordpress-plugin
- * @since             0.0.1
+ * @since             0.0.2
  * @package           woocommerce-lkpp-v5-connector
  *
  * @wordpress-plugin
  * Plugin Name:       Woocommerce LKPP E-Catalogue V5 Connector
  * Plugin URI:        https://github.com/sinergi-wordpress-plugin/woocommerce-lkpp-v5-connector
  * Description:       Woocommerce connector for LKPP E-Catalogue V5
- * Version:           0.0.1
+ * Version:           0.0.2
  * Author:            Sinergi Creative
  * Author URI:        https://github.com/sinergi-wordpress-plugin
  * License:           GPL-3.0
@@ -130,7 +130,7 @@ class WooCommerce_Lkpp_Connector {
     /**
     * Add LKPP product category taxonomies
     *
-    * @since 0.0.1
+    * @since 0.0.2
     */
  
     public function create_lkpp_category_taxonomy() {
@@ -173,7 +173,7 @@ class WooCommerce_Lkpp_Connector {
     /**
     * Add LKPP product brand taxonomies
     *
-    * @since 0.0.1
+    * @since 0.0.2
     */
  
     public function create_lkpp_brand_taxonomy() {
