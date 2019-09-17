@@ -78,7 +78,7 @@ class WooCommerce_Lkpp_Connector {
             'options'   => __('One option per line', 'wc_warranty')
         ) );*/
 
-        $this->include_files();
+        //$this->include_files();
 
         /*if ( !is_admin() ) {
             add_action( 'wp_enqueue_scripts', array($this, 'enqueue_scripts') );
@@ -92,17 +92,17 @@ class WooCommerce_Lkpp_Connector {
     /**
     * Initialization logic
     */
-    public function init() {
+    /*public function init() {
         require_once self::$includes_path . '/class-warranty-privacy.php';
-    }
+    }*/
 
-    public function enqueue_scripts() {
+    /*public function enqueue_scripts() {
         wp_enqueue_style( 'wc_warranty', plugins_url( 'assets/css/front.css', self::$plugin_file ) );
-    }
+    }*/
     /**
     * Include core files
     */
-    public function include_files() {
+    /*public function include_files() {
         //require_once self::$includes_path . '/class.warranty_compat.php';
         //require_once self::$includes_path .'/functions.php';
         //require_once self::$includes_path .'/class-warranty-install.php';
@@ -124,7 +124,7 @@ class WooCommerce_Lkpp_Connector {
             require_once self::$includes_path .'/class-warranty-ajax.php';
         }*/
 
-    }
+    //}
 
 
     /**
