@@ -11,7 +11,7 @@ class Lkpp_Admin {
      * Register the hooks
      */
     public function __construct() {
-        add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+        //add_action( 'admin_menu', array( $this, 'admin_menu' ) );
         //add_action( 'admin_notices', array( $this, 'add_notices' ) );
 
         //add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts'), 11 );
