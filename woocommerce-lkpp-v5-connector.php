@@ -27,7 +27,7 @@
  * WC tested up to: 3.5.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly    
 
 /**
  * Required functions
@@ -48,7 +48,7 @@ if ( sc_is_woocommerce_active() ) {
             self::$base_path        = plugin_dir_path( __FILE__ );
             self::$includes_path    = trailingslashit( self::$base_path ) . 'includes';
 
-            add_action( 'init', array($this, 'init'), 0 );
+            add_action( 'init', array($this, 'init') );
         }
 
         /**
