@@ -35,12 +35,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Required functions
  */
-if ( ! function_exists( 'is_woocommerce_active' ) )
+if ( ! function_exists( 'sc_is_woocommerce_active' ) )
     require_once( 'woo-includes/woo-functions.php' );
 
-if ( is_woocommerce_active() ) {
+if ( sc_is_woocommerce_active() ) {
 
-    class WooCommerce_Lkpp_Connector {
+    class WoocommerceLKPPConnector {
         /**
         * Setup the WC_Warranty extension
         */
@@ -141,5 +141,5 @@ if ( is_woocommerce_active() ) {
         }
     }
 
-    $GLOBALS['wc_lkpp'] = new WooCommerce_Lkpp_Connector();
+    $GLOBALS['wc_lkpp'] = new WoocommerceLKPPConnector();
 }
