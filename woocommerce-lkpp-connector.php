@@ -27,11 +27,6 @@
  * WC tested up to: 3.5.1
  */
 
- // If this file is called directly, abort.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
 /**
  * Required functions
  */
