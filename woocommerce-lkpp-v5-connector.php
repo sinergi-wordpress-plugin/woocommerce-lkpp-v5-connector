@@ -27,6 +27,8 @@
  * WC tested up to: 3.5.1
  */
 
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 /**
  * Required functions
  */
@@ -36,6 +38,7 @@ if ( ! function_exists( 'sc_is_woocommerce_active' ) )
 if ( sc_is_woocommerce_active() ) {
 
     class WoocommerceLKPPConnector {
+        
         /**
         * Setup the WC_Warranty extension
         */
@@ -45,6 +48,13 @@ if ( sc_is_woocommerce_active() ) {
             self::$base_path        = plugin_dir_path( __FILE__ );
             self::$includes_path    = trailingslashit( self::$base_path ) . 'includes';
 
+            add_action( 'init', array($this, 'init'), 0 );
+        }
+
+        /**
+         * Initialization logic
+         */
+        public function init() {
             add_action( 'init', array($this, 'create_lkpp_category_taxonomy'), 0 );
             add_action( 'init', array($this, 'create_lkpp_brand_taxonomy'), 0 );
         }
