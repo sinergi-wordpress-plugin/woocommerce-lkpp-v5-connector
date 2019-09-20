@@ -73,7 +73,7 @@ class Lkpp_Admin {
         if ( version_compare( WC_VERSION, '2.6', '<' ) ) {
             add_action( 'woocommerce_product_write_panels', array( $this, 'panel_add_custom_box' ) );
         } else {
-            add_filter( 'woocommerce_product_data_panels', array( $this, 'panel_add_custom_box' ) );
+            add_action( 'woocommerce_product_data_panels', array( $this, 'panel_add_custom_box' ) );
         }
     }
 
@@ -223,7 +223,7 @@ class Lkpp_Admin {
             $warranty_label = __('Warranty', 'wc_warranty');
         }*/
 
-        include plugin_dir_path( __FILE__ ) .'/templates/admin/product-panel.php';
+        include plugin_dir_path( __FILE__ ) .'templates/admin/product-panel.php';
     }
 }
 endif;

@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  **/
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
-    require_once plugin_dir_path( __FILE__ ) . '/includes/class-lkpp-admin.php';
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-lkpp-admin.php';
     
     add_action( 'init', 'create_lkpp_category_taxonomy', 0 );
 
