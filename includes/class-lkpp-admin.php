@@ -93,8 +93,8 @@ class Lkpp_Admin {
         $lkpp_active = get_post_meta( $post->ID, 'lkpp_active', true );
 
         if (trim($lkpp_active) == '') {
-            update_post_meta($post->ID, 'lkpp_active', 'not_active');
-            $lkpp_active = 'not_active';
+            update_post_meta($post->ID, 'lkpp_active', 'inactive');
+            $lkpp_active = 'inactive';
         }
 
         $lkpp_publish = get_post_meta( $post->ID, 'lkpp_publish', true );

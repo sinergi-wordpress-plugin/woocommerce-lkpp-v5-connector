@@ -4,18 +4,6 @@
 </style>
 <div id="lkpp_product_data" class="panel woocommerce_options_panel">
 
-    <!-- <div class="options_group show_if_variable">
-        <p class="form-field">
-            <label for="variable_warranty_control">
-                <?php _e('Warranty Control', 'wc_warranty'); ?>
-            </label>
-            <select id="variable_warranty_control" name="variable_warranty_control">
-                <option value="parent" <?php selected( $control_type, 'parent' ); ?>><?php _e('Define warranty for all variations', 'wc_warranty'); ?></option>
-                <option value="variations" <?php selected( $control_type, 'variations' ); ?>><?php _e('Define warranty per variation', 'wc_warranty'); ?></option>
-            </select>
-        </p>
-    </div> -->
-
     <div class="options_group grouping hide_if_control_variations">
         <p class="form-field lkpp_active_field">
             <label for="lkpp_active">
@@ -141,53 +129,5 @@
         </p>
         
     </div>
-
-    <!-- <div class="options_group grouping show_if_addon_warranty hide_if_control_variations">
-        <p class="form-field">
-            <label for="addon_no_warranty">
-                <?php _e( '"No Warranty" option', 'wc_warranty'); ?>
-            </label>
-            <input type="checkbox" name="addon_no_warranty" id="addon_no_warranty" value="yes" <?php if (isset($warranty['no_warranty_option']) && $warranty['no_warranty_option'] == 'yes') echo 'checked'; ?> class="checkbox warranty_field" />
-        </p>
-
-        <table class="widefat">
-            <thead>
-            <tr>
-                <th><?php _e('Cost', 'wc_warranty'); ?></th>
-                <th><?php _e('Duration', 'wc_warranty'); ?></th>
-                <th width="50">&nbsp;</th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr>
-                <th colspan="3">
-                    <a href="#" class="button btn-add-warranty"><?php _e('Add Row', 'wc_warranty'); ?></a>
-                </th>
-            </tr>
-            </tfoot>
-            <tbody id="warranty_addons">
-            <?php
-            if ( isset($warranty['addons']) ) foreach ( $warranty['addons'] as $addon ):
-                ?>
-                <tr>
-                    <td valign="middle">
-                        <span class="input"><b>+</b> <?php echo $currency; ?></span>
-                        <input type="text" name="addon_warranty_amount[]" class="input-text sized warranty_field" size="4" value="<?php echo $addon['amount']; ?>" />
-                    </td>
-                    <td valign="middle">
-                        <input type="text" class="input-text sized warranty_field" size="3" name="addon_warranty_length_value[]" value="<?php echo $addon['value']; ?>" />
-                        <select name="addon_warranty_length_duration[]" class=" warranty_field">
-                            <option value="days" <?php if ($addon['duration'] == 'days') echo 'selected'; ?>><?php _e('Days', 'wc_warranty'); ?></option>
-                            <option value="weeks" <?php if ($addon['duration'] == 'weeks') echo 'selected'; ?>><?php _e('Weeks', 'wc_warranty'); ?></option>
-                            <option value="months" <?php if ($addon['duration'] == 'months') echo 'selected'; ?>><?php _e('Months', 'wc_warranty'); ?></option>
-                            <option value="years" <?php if ($addon['duration'] == 'years') echo 'selected'; ?>><?php _e('Years', 'wc_warranty'); ?></option>
-                        </select>
-                    </td>
-                    <td><a class="button warranty_addon_remove" href="#">&times;</a></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-
-        </table>
-    </div> -->
+    
 </div>
