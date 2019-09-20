@@ -73,7 +73,7 @@ class Lkpp_Admin {
         if ( version_compare( WC_VERSION, '2.6', '<' ) ) {
             add_action( 'woocommerce_product_write_panels', array( $this, 'panel_add_custom_box' ) );
         } else {
-            add_action( 'woocommerce_product_data_panels', array( $this, 'panel_add_custom_box' ) );
+            add_filter( 'woocommerce_product_data_panels', array( $this, 'panel_add_custom_box' ) );
         }
     }
 
