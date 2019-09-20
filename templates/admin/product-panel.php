@@ -4,22 +4,23 @@
 </style>
 <div id="lkpp_product_data" class="panel woocommerce_options_panel">
 
-    <div class="options_group grouping hide_if_control_variations">
-        <p class="form-field lkpp_active_field">
+    <div class="options_group grouping">
+        
+        <p class="form-field">
             <label for="lkpp_active">
                 <?php _e('LKPP Active', 'woocommerce'); ?>
             </label>
-            <select id="lkpp_active" name="lkpp_active" class="select warranty_field">
+            <select id="lkpp_active" name="lkpp_active" class="select">
                 <option value="active" <?php if ($lkpp_active == 'active') echo 'selected'; ?>><?php _e('Active', 'woocommerce'); ?></option>
                 <option value="inactive" <?php if ($lkpp_active == 'inactive') echo 'selected'; ?>><?php _e('Inactive', 'woocommerce'); ?></option>
             </select>
         </p>
 
-        <p class="form-field lkpp_publish_field">
+        <p class="form-field">
             <label for="lkpp_publish">
                 <?php _e('LKPP Publish', 'woocommerce'); ?>
             </label>
-            <select id="lkpp_publish" name="lkpp_publish" class="select warranty_field">
+            <select id="lkpp_publish" name="lkpp_publish" class="select">
                 <option value="publish" <?php if ($lkpp_active == 'publish') echo 'selected'; ?>><?php _e('Publish', 'woocommerce'); ?></option>
                 <option value="unpublish" <?php if ($lkpp_active == 'unpublish') echo 'selected'; ?>><?php _e('Unpublish', 'woocommerce'); ?></option>
             </select>
@@ -29,7 +30,7 @@
             <label for="lkpp_product_category_id">
                 <?php _e('LKPP Product Category', 'woocommerce'); ?>
             </label>
-            <select id="lkpp_product_category_id" name="lkpp_product_category_id" class="select warranty_field">
+            <select id="lkpp_product_category_id" name="lkpp_product_category_id" class="select">
                 <?php
                     global $post; 
                     $lkpp_categ_id = get_post_meta($post->ID, 'lkpp_product_category_id', true);
@@ -59,7 +60,7 @@
             <label for="lkpp_brand_id">
                 <?php _e('LKPP Brand', 'woocommerce'); ?>
             </label>
-            <select id="lkpp_brand_id" name="lkpp_brand_id" class="select warranty_field">
+            <select id="lkpp_brand_id" name="lkpp_brand_id" class="select">
                 <?php
                     global $post; 
                     $lkpp_brand_id = get_post_meta($post->ID, 'lkpp_brand_id', true);
@@ -89,13 +90,13 @@
             <label for="local_product">
                 <?php _e('Produk Lokal', 'woocommerce'); ?>
             </label>
-            <select id="local_product" name="local_product" class="select warranty_field">
+            <select id="local_product" name="local_product" class="select">
                 <option value="yes" <?php if ($local_product == 'yes') echo 'selected'; ?>><?php _e('Yes', 'woocommerce'); ?></option>
                 <option value="no" <?php if ($local_product == 'no') echo 'selected'; ?>><?php _e('No', 'woocommerce'); ?></option>
             </select>
         </p>
 
-        <p class="form-field show_if_local_product show_if_addon_warranty"> 
+        <p class="form-field show_if_local_product"> 
             <label for="tkdn"><?php _e('Komposisi Komponen Dalam Negeri', 'woocommerce'); ?></label>
 
             <input type="text" name="tkdn" value="<?php echo esc_attr($tkdn); ?>" class="input-text sized tkdn" />
@@ -103,7 +104,8 @@
         
     </div>
 
-    <div class="options_group grouping hide_if_control_variations">
+    <div class="options_group grouping">
+        
         <p class="form-field"> 
             <label for="lkpp_price"><?php _e('Harga LKPP ( Include PPN )', 'woocommerce'); ?></label>
 
