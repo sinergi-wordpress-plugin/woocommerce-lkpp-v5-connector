@@ -45,7 +45,7 @@
                                     )
                                 ),
                                 'taxonomy'  => 'lkpp_product_category',
-                                );
+                                )
                         );
                         $lkpp_categ_name = $lkpp_categ->name;
                         $html = '<option value="' . $lkpp_categ_id . '" selected="selected">' . $lkpp_categ_name . '</option>';
@@ -75,7 +75,7 @@
                                     )
                                 ),
                                 'taxonomy'  => 'lkpp_product_brand',
-                                );
+                                )
                         );
                         $lkpp_brand_name = $lkpp_brand->name;
                         $html = '<option value="' . $lkpp_brand_id . '" selected="selected">' . $lkpp_brand_name . '</option>';
@@ -129,5 +129,5 @@
         </p>
         
     </div>
-    
+
 </div>
