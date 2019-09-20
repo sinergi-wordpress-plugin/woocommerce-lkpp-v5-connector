@@ -31,93 +31,98 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
-add_action( 'init', array($this, 'create_lkpp_category_taxonomy'), 0 );
-
 /**
-* Add LKPP product category taxonomies
-*
-* @since 0.0.2
-*/
- 
-function create_lkpp_category_taxonomy() {
- 
-    // Labels part for the GUI
-    $labels = array(
-        'name' => _x( 'LKPP Product Categories', 'taxonomy general name' ),
-        'singular_name' => _x( 'LKPP Product Category', 'taxonomy singular name' ),
-        'search_items' =>  __( 'Search LKPP Product Categories' ),
-        'popular_items' => null,
-        'all_items' => __( 'All LKPP Product Categories' ),
-        'parent_item' => null,
-        'parent_item_colon' => null,
-        'edit_item' => null, 
-        'update_item' => null,
-        'add_new_item' => null,
-        'new_item_name' => null,
-        'separate_items_with_commas' => __( 'Separate topics with commas' ),
-        'add_or_remove_items' => __( 'Add or remove topics' ),
-        'choose_from_most_used' => null,
-        'menu_name' => __( 'LKPP Product Categories' ),
-    ); 
- 
-    // set taxonomy option data
-    $args = array(
-        'labels'                     => $labels,
-        'hierarchical'               => false,
-        'public'                     => true,
-        'show_ui'                    => false,
-        'show_admin_column'          => false,
-        'show_in_nav_menus'          => false,
-        'show_tagcloud'              => true,
-    );
+ * Check if WooCommerce is active
+ **/
+if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    
+    add_action( 'init', 'create_lkpp_category_taxonomy', 0 );
 
-    // register taxonomy to woocommerce product object
-    register_taxonomy( 'lkpp_product_category', 'product', $args );
-    register_taxonomy_for_object_type( 'lkpp_product_category', 'product' );
+    /**
+    * Add LKPP product category taxonomies
+    *
+    * @since 0.0.2
+    */
+ 
+    function create_lkpp_category_taxonomy() {
+ 
+        // Labels part for the GUI
+        $labels = array(
+            'name' => _x( 'LKPP Product Categories', 'taxonomy general name' ),
+            'singular_name' => _x( 'LKPP Product Category', 'taxonomy singular name' ),
+            'search_items' =>  __( 'Search LKPP Product Categories' ),
+            'popular_items' => null,
+            'all_items' => __( 'All LKPP Product Categories' ),
+            'parent_item' => null,
+            'parent_item_colon' => null,
+            'edit_item' => null, 
+            'update_item' => null,
+            'add_new_item' => null,
+            'new_item_name' => null,
+            'separate_items_with_commas' => __( 'Separate topics with commas' ),
+            'add_or_remove_items' => __( 'Add or remove topics' ),
+            'choose_from_most_used' => null,
+            'menu_name' => __( 'LKPP Product Categories' ),
+        ); 
+ 
+        // set taxonomy option data
+        $args = array(
+            'labels'                     => $labels,
+            'hierarchical'               => false,
+            'public'                     => true,
+            'show_ui'                    => false,
+            'show_admin_column'          => false,
+            'show_in_nav_menus'          => false,
+            'show_tagcloud'              => true,
+        );
+
+        // register taxonomy to woocommerce product object
+        register_taxonomy( 'lkpp_product_category', 'product', $args );
+        register_taxonomy_for_object_type( 'lkpp_product_category', 'product' );
+    }
+    
+    add_action( 'init', 'create_lkpp_category_taxonomy', 0 );
+
+    /**
+    * Add LKPP product category taxonomies
+    *
+    * @since 0.0.2
+    */
+ 
+    function create_lkpp_category_taxonomy() {
+ 
+        // Labels part for the GUI
+        $labels = array(
+            'name' => _x( 'LKPP Product Categories', 'taxonomy general name' ),
+            'singular_name' => _x( 'LKPP Product Category', 'taxonomy singular name' ),
+            'search_items' =>  __( 'Search LKPP Product Categories' ),
+            'popular_items' => null,
+            'all_items' => __( 'All LKPP Product Categories' ),
+            'parent_item' => null,
+            'parent_item_colon' => null,
+            'edit_item' => null, 
+            'update_item' => null,
+            'add_new_item' => null,
+            'new_item_name' => null,
+            'separate_items_with_commas' => __( 'Separate topics with commas' ),
+            'add_or_remove_items' => __( 'Add or remove topics' ),
+            'choose_from_most_used' => null,
+            'menu_name' => __( 'LKPP Product Categories' ),
+        ); 
+ 
+        // set taxonomy option data
+        $args = array(
+            'labels'                     => $labels,
+            'hierarchical'               => false,
+            'public'                     => true,
+            'show_ui'                    => false,
+            'show_admin_column'          => false,
+            'show_in_nav_menus'          => false,
+            'show_tagcloud'              => true,
+        );
+
+        // register taxonomy to woocommerce product object
+        register_taxonomy( 'lkpp_product_category', 'product', $args );
+        register_taxonomy_for_object_type( 'lkpp_product_category', 'product' );
+    }
 }
-
-add_action( 'init', array($this, 'create_lkpp_brand_taxonomy'), 0 );
-
-/**
-* Add LKPP product brand taxonomies
-*
-* @since 0.0.2
-*/
- 
-function create_lkpp_brand_taxonomy() {
- 
-    // Labels part for the GUI
-    $labels = array(
-        'name' => _x( 'LKPP Product Brand', 'taxonomy general name' ),
-        'singular_name' => _x( 'LKPP Product Brand', 'taxonomy singular name' ),
-        'search_items' =>  __( 'Search LKPP Product Brands' ),
-        'popular_items' => null,
-        'all_items' => __( 'All LKPP Product Brands' ),
-        'parent_item' => null,
-        'parent_item_colon' => null,
-        'edit_item' => null, 
-        'update_item' => null,
-        'add_new_item' => null,
-        'new_item_name' => null,
-        'separate_items_with_commas' => __( 'Separate topics with commas' ),
-        'add_or_remove_items' => __( 'Add or remove topics' ),
-        'choose_from_most_used' => null,
-        'menu_name' => __( 'LKPP Product Brands' ),
-    ); 
- 
-    // set taxonomy option data
-    $args = array(
-        'labels'                     => $labels,
-        'hierarchical'               => false,
-        'public'                     => true,
-        'show_ui'                    => false,
-        'show_admin_column'          => false,
-        'show_in_nav_menus'          => false,
-        'show_tagcloud'              => true,
-    );
-
-    // register taxonomy to woocommerce product object
-    register_taxonomy( 'lkpp_product_brand', 'product', $args );
-    register_taxonomy_for_object_type( 'lkpp_product_brand', 'product' );
-}
-
