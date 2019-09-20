@@ -223,7 +223,7 @@ class Lkpp_Admin {
             $warranty_label = __('Warranty', 'wc_warranty');
         }*/
 
-        include plugin_dir_path( __FILE__ ) .'templates/admin/product-panel.php';
+        include plugin_dir_path( __FILE__ ) .'/templates/admin/product-panel.php';
     }
 }
 endif;
