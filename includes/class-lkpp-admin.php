@@ -121,7 +121,7 @@ class Lkpp_Admin {
         }
 
         $tkdn = get_post_meta( $post->ID, 'tkdn', true );
-        
+
         if (trim($tkdn) == '') {
             update_post_meta($post->ID, 'tkdn', '0');
             $tkdn = '0';
@@ -135,7 +135,7 @@ class Lkpp_Admin {
                 <?php
 
                     woocommerce_wp_select( array( 
-                        'id'      => '_lkpp_active', 
+                        'id'      => 'lkpp_active', 
                         'label'   => __( 'LKPP Active', 'woocommerce' ), 
                         'options' => array(
                             'active'   => __( 'Active', 'woocommerce' ),
