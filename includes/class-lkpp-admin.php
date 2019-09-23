@@ -68,162 +68,69 @@ class Lkpp_Admin {
     }
 
     public function init() {
-        add_action( 'woocommerce_product_write_panel_tabs', array( $this, 'panel_data_tab' ) );
+        add_filter( 'woocommerce_product_data_tabs', array( $this, 'custom_product_tabs' ) );
 
         if ( version_compare( WC_VERSION, '2.6', '<' ) ) {
-            add_action( 'woocommerce_product_write_panels', array( $this, 'panel_add_custom_box' ) );
+            add_filter( 'woocommerce_product_data_tabs', array( $this, 'giftcard_options_product_tab_content' ) );
         } else {
-            add_action( 'woocommerce_product_data_panels', array( $this, 'panel_add_custom_box' ) );
+            add_filter( 'woocommerce_product_data_panels', array( $this, 'giftcard_options_product_tab_content' ) );
         }
     }
 
     /**
-     * Adds a 'Warranty' tab to a product's data tabs
+     * Add a custom product tab.
      */
-    function panel_data_tab() {
-        echo ' <li class="warranty_tab tax_options hide_if_external"><a href="#lkpp_product_data"><span>'. __('LKPP', 'woocommerce') .'</span></a></li>';
+    function custom_product_tabs( $tabs) {
+
+	    $tabs['giftcard'] = array(
+		    'label'		=> __( 'Gift Card', 'woocommerce' ),
+		    'target'	=> 'giftcard_options',
+		    'class'		=> array( 'show_if_simple', 'show_if_variable'  ),
+	    );
+
+	    return $tabs;
+
     }
 
     /**
-     * Outputs the form for the Warranty data tab
+     * Contents of the gift card options product tab.
      */
-    function panel_add_custom_box() {
-        global $post, $wpdb, $thepostid, $woocommerce;
+    function giftcard_options_product_tab_content() {
 
-        $lkpp_active = get_post_meta( $post->ID, 'lkpp_active', true );
+	    global $post;
+	
+	    // Note the 'id' attribute needs to match the 'target' parameter set above
+        ?>
+        <div id='giftcard_options' class='panel woocommerce_options_panel'>
+            <?php ?>
+            <div class='options_group'>
+                <?php
 
-        if (trim($lkpp_active) == '') {
-            update_post_meta($post->ID, 'lkpp_active', 'inactive');
-            $lkpp_active = 'inactive';
-        }
+			        woocommerce_wp_checkbox( array(
+				        'id' 		=> '_allow_personal_message',
+				        'label' 	=> __( 'Allow the customer to add a personal message', 'woocommerce' ),
+                        ) 
+                    );
 
-        $lkpp_publish = get_post_meta( $post->ID, 'lkpp_publish', true );
+			        woocommerce_wp_text_input( array(
+				        'id'				=> '_valid_for_days',
+				        'label'				=> __( 'Gift card validity (in days)', 'woocommerce' ),
+				        'desc_tip'			=> 'true',
+				        'description'		=> __( 'Enter the number of days the gift card is valid for.', 'woocommerce' ),
+				        'type' 				=> 'number',
+				        'custom_attributes'	=> array(
+					        'min'	=> '1',
+					        'step'	=> '1',
+				            ),
+                        ) 
+                    );
 
-        if (trim($lkpp_publish) == '') {
-            update_post_meta($post->ID, 'lkpp_publish', 'unpublish');
-            $warranty_type_value = 'unpublish';
-        }
+                ?>
+            </div>
 
-        $local_product = get_post_meta( $post->ID, 'local_product', true );
+        </div>
+        <?php
 
-        if (trim($lkpp_active) == '') {
-            update_post_meta($post->ID, 'local_product', 'no');
-            $lkpp_active = 'no';
-        }
-
-        $tkdn = get_post_meta( $post->ID, 'tkdn', true );
-
-        if (trim($tkdn) == '') {
-            update_post_meta($post->ID, 'tkdn', '0');
-            $tkdn = '0';
-        }
-
-        // $currency = get_woocommerce_currency_symbol();
-        /* $inline = '
-            var warranty_fields_toggled = false;
-            $("#product_warranty_default").change(function() {
-
-                if ($(this).is(":checked")) {
-                    $(".warranty_field").attr("disabled", true);
-                } else {
-                    $(".warranty_field").attr("disabled", false);
-                }
-
-            }).change();
-
-            $("#product_warranty_type").change(function() {
-                $(".show_if_included_warranty, .show_if_addon_warranty").hide();
-
-                if ($(this).val() == "included_warranty") {
-                    $(".show_if_included_warranty").show();
-                } else if ($(this).val() == "addon_warranty") {
-                    $(".show_if_addon_warranty").show();
-                }
-            }).change();
-
-            $("#included_warranty_length").change(function() {
-                if ($(this).val() == "limited") {
-                    $(".limited_warranty_length_field").show();
-                } else {
-                    $(".limited_warranty_length_field").hide();
-                }
-            }).change();
-
-            var tmpl = "<tr>\
-                            <td valign=\"middle\">\
-                                <span class=\"input\"><b>+</b> '. $currency .'</span>\
-                                <input type=\"text\" name=\"addon_warranty_amount[]\" class=\"input-text sized\" size=\"4\" value=\"\" />\
-                            </td>\
-                            <td valign=\"middle\">\
-                                <input type=\"text\" class=\"input-text sized\" size=\"3\" name=\"addon_warranty_length_value[]\" value=\"\" />\
-                                <select name=\"addon_warranty_length_duration[]\">\
-                                    <option value=\"days\">'. __('Days', 'wc_warranty') .'</option>\
-                                    <option value=\"weeks\">'. __('Weeks', 'wc_warranty') .'</option>\
-                                    <option value=\"months\">'. __('Months', 'wc_warranty') .'</option>\
-                                    <option value=\"years\">'. __('Years', 'wc_warranty') .'</option>\
-                                </select>\
-                            </td>\
-                            <td><a class=\"button warranty_addon_remove\" href=\"#\">&times;</a></td>\
-                        </tr>";
-
-            $(".btn-add-warranty").click(function(e) {
-                e.preventDefault();
-
-                $("#warranty_addons").append(tmpl);
-            });
-
-            $(".warranty_addon_remove").live("click", function(e) {
-                e.preventDefault();
-
-                $(this).parents("tr").remove();
-            });
-
-            $("#variable_warranty_control").change(function() {
-                if ($(this).val() == "variations") {
-                    $(".hide_if_control_variations").hide();
-                    $(".show_if_control_variations").show();
-                } else {
-                    $(".hide_if_control_variations").show();
-                    $(".show_if_control_variations").hide();
-                    $("#warranty_product_data :input[id!=variable_warranty_control]").change();
-                }
-            }).change();
-
-            $("#variable_product_options").on("woocommerce_variations_added", function() {
-                $("#variable_warranty_control").change();
-            });
-
-            $("#woocommerce-product-data").on("woocommerce_variations_loaded", function() {
-                $("#variable_warranty_control").change();
-            });
-            '; */
-
-        /* if ( function_exists('wc_enqueue_js') ) {
-            wc_enqueue_js( $inline );
-        } else {
-            $woocommerce->add_inline_js( $inline );
-        } */
-
-        //$warranty_label = $warranty['label'];
-        //$default_warranty = false;
-        //$control_type   = 'parent';
-
-        //$product = wc_get_product( $post->ID );
-
-        /*if ( $product->is_type( 'variable' ) ) {
-            $control_type = get_post_meta( $post->ID, '_warranty_control', true );
-            if (! $control_type ) {
-                $control_type = 'variations';
-            }
-        }*/
-
-        //$default_warranty = isset( $warranty['default'] ) ? $warranty['default'] : false;
-
-        /*if ( empty($warranty_label) ) {
-            $warranty_label = __('Warranty', 'wc_warranty');
-        }*/
-
-        include plugin_dir_path( __FILE__ ) .'templates/admin/product-panel.php';
     }
 }
 endif;
