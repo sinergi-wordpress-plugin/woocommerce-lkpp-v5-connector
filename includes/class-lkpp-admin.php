@@ -153,26 +153,68 @@ class Lkpp_Admin {
                             )
                         )
                     );
+                ?>
+                <p class="form-field lkpp_product_category_id">
+                    <label for="lkpp_product_category_id"><?php _e( 'LKPP Product Category', 'woocommerce' ); ?></label>
+                    <select id="lkpp_product_category_id" name="lkpp_product_category_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Category&hellip;', 'woocommerce' ); ?>">
+	                    <?php
+        
+                            $lkpp_product_category_id = get_post_meta( $post->ID, 'lkpp_product_category_id', true );
+		                    if ( $lkpp_product_category_id ) {
 
-			        woocommerce_wp_checkbox( array(
-				        'id' 		=> '_allow_personal_message',
-				        'label' 	=> __( 'Allow the customer to add a personal message', 'woocommerce' ),
-                        ) 
-                    );
+				                $lkpp_categ = get_terms(
+                                    array(
+                                        'hide_empty' => false, // also retrieve terms which are not used yet
+                                        'meta_query' => array(
+                                            array(
+                                               'key'       => 'lkpp_product_category_id',
+                                               'value'     => $lkpp_product_category_id,
+                                               'compare'   => 'LIKE'
+                                            )
+                                        ),
+                                        'taxonomy'  => 'lkpp_product_category',
+                                        )
+                                );
+                                $lkpp_categ_name = $lkpp_categ->name;
+				                echo '<option value="' . $lkpp_product_category_id . '" selected="selected">' . $lkpp_categ_name . '</option>';
+			                    
+		                    }
+	                    ?>
+                    </select> 
+                    <img class="help_tip" data-tip='<?php _e( 'Your description here', 'woocommerce' ) ?>' src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+                </p>
 
-			        woocommerce_wp_text_input( array(
-				        'id'				=> '_valid_for_days',
-				        'label'				=> __( 'Gift card validity (in days)', 'woocommerce' ),
-				        'desc_tip'			=> 'true',
-				        'description'		=> __( 'Enter the number of days the gift card is valid for.', 'woocommerce' ),
-				        'type' 				=> 'number',
-				        'custom_attributes'	=> array(
-					        'min'	=> '1',
-					        'step'	=> '1',
-				            ),
-                        ) 
-                    );
+                <p class="form-field lkpp_brand_id">
+                    <label for="lkpp_brand_id"><?php _e( 'LKPP Product Brand', 'woocommerce' ); ?></label>
+                    <select id="lkpp_brand_id" name="lkpp_brand_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>">
+	                    <?php
+        
+                            $lkpp_brand_id = get_post_meta( $post->ID, 'lkpp_brand_id', true );
+		                    if ( $lkpp_brand_id ) {
 
+				                $lkpp_brand = get_terms(
+                                    array(
+                                        'hide_empty' => false, // also retrieve terms which are not used yet
+                                        'meta_query' => array(
+                                            array(
+                                               'key'       => 'lkpp_brand_id',
+                                               'value'     => $lkpp_brand_id,
+                                               'compare'   => 'LIKE'
+                                            )
+                                        ),
+                                        'taxonomy'  => 'lkpp_product_brand',
+                                        )
+                                );
+                                $lkpp_brand_name = $lkpp_brand->name;
+				                echo '<option value="' . $lkpp_product_brand . '" selected="selected">' . $lkpp_brand_name . '</option>';
+			                    
+		                    }
+	                    ?>
+                    </select> 
+                    <img class="help_tip" data-tip='<?php _e( 'Your description here', 'woocommerce' ) ?>' src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
+                </p>
+                <?php 
+                
                 ?>
             </div>
 
