@@ -68,23 +68,23 @@ class Lkpp_Admin {
     }
 
     public function init() {
-        add_filter( 'woocommerce_product_data_tabs', array( $this, 'custom_product_tabs' ) );
+        add_filter( 'woocommerce_product_data_tabs', array( $this, 'lkpp_product_tabs' ) );
 
         if ( version_compare( WC_VERSION, '2.6', '<' ) ) {
-            add_filter( 'woocommerce_product_data_tabs', array( $this, 'giftcard_options_product_tab_content' ) );
+            add_filter( 'woocommerce_product_data_tabs', array( $this, 'lkpp_options_product_tab_content' ) );
         } else {
-            add_filter( 'woocommerce_product_data_panels', array( $this, 'giftcard_options_product_tab_content' ) );
+            add_filter( 'woocommerce_product_data_panels', array( $this, 'lkpp_options_product_tab_content' ) );
         }
     }
 
     /**
      * Add a custom product tab.
      */
-    function custom_product_tabs( $tabs) {
+    function lkpp_product_tabs( $tabs) {
 
-	    $tabs['giftcard'] = array(
-		    'label'		=> __( 'Gift Card', 'woocommerce' ),
-		    'target'	=> 'giftcard_options',
+	    $tabs['lkpp'] = array(
+		    'label'		=> __( 'LKPP', 'woocommerce' ),
+		    'target'	=> 'lkpp_data_options',
 		    'class'		=> array( 'show_if_simple', 'show_if_variable'  ),
 	    );
 
@@ -95,13 +95,13 @@ class Lkpp_Admin {
     /**
      * Contents of the gift card options product tab.
      */
-    function giftcard_options_product_tab_content() {
+    function lkpp_options_product_tab_content() {
 
 	    global $post;
 	
 	    // Note the 'id' attribute needs to match the 'target' parameter set above
         ?>
-        <div id='giftcard_options' class='panel woocommerce_options_panel'>
+        <div id='lkpp_data_options' class='panel woocommerce_options_panel'>
             <?php ?>
             <div class='options_group'>
                 <?php
