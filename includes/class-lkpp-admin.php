@@ -144,6 +144,16 @@ class Lkpp_Admin {
                         )
                     );
 
+                    woocommerce_wp_select( array( 
+                        'id'      => 'lkpp_publish', 
+                        'label'   => __( 'LKPP Publish', 'woocommerce' ), 
+                        'options' => array(
+                            'publish'   => __( 'Publish', 'woocommerce' ),
+                            'unpublish'   => __( 'Unpublish', 'woocommerce' )
+                            )
+                        )
+                    );
+
 			        woocommerce_wp_checkbox( array(
 				        'id' 		=> '_allow_personal_message',
 				        'label' 	=> __( 'Allow the customer to add a personal message', 'woocommerce' ),
