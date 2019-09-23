@@ -227,8 +227,8 @@ class Lkpp_Admin {
      */
     function admin_scripts(){
  
-        wp_enqueue_style('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' );
-        wp_enqueue_script('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array('jquery') );
+        //wp_enqueue_style('select2-lkpp', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' );
+        //wp_enqueue_script('select2-lkpp', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array('jquery') );
      
         // please create also an empty JS file in your theme directory and include it too
         wp_enqueue_script('lkpp_admin', LKPP_CONNECTOR . 'assets/js/admin.js', array( 'jquery', 'select2' ) ); 
