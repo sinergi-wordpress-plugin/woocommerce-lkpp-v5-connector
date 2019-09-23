@@ -14,7 +14,8 @@ class Lkpp_Admin {
         //add_action( 'admin_menu', array( $this, 'admin_menu' ) );
         //add_action( 'admin_notices', array( $this, 'add_notices' ) );
 
-        //add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts'), 11 );
+        add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts'), 11 );
+        add_action( 'wp_ajax_lkppgetcateg', 'lkpp_get_categ_callback' );
         //add_action( 'admin_footer', array($this, 'variable_script') );
 
         // metaboxes
@@ -175,7 +176,7 @@ class Lkpp_Admin {
                                         'taxonomy'  => 'lkpp_product_category',
                                         )
                                 );
-                                $lkpp_categ_name = $lkpp_categ->name;
+                                $lkpp_categ_name = $lkpp_categ[0]->name;
 				                echo '<option value="' . $lkpp_product_category_id . '" selected="selected">' . $lkpp_categ_name . '</option>';
 			                    
 		                    }
@@ -220,6 +221,47 @@ class Lkpp_Admin {
         <?php
 
     }
+
+    /**
+     * Load Select 2 and JS Script.
+     */
+    function admin_scripts(){
+ 
+        wp_enqueue_style('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' );
+        wp_enqueue_script('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array('jquery') );
+     
+        // please create also an empty JS file in your theme directory and include it too
+        wp_enqueue_script('lkpp_admin', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery', 'select2' ) ); 
+     
+    }
+
+    /**
+     * LKPP Get Product Categ Ajax Handler.
+     */
+    function lkpp_get_categ_callback(){
+ 
+        // we will pass post IDs and titles to this array
+        $return = array();
+     
+        // you can use WP_Query, query_posts() or get_posts() here - it doesn't matter
+        $search_results = new WP_Term_Query( array( 
+            'name__like'=> $_GET['q'], // the search query
+            'taxonomy' => 'lkpp_product_category', // if you don't want drafts to be returned
+            'hide_empty' => false,
+            'fields' => 'all'
+        ) );
+
+        if( ! empty( $search_results->terms ) ) {
+            foreach ( $search_results->terms as $term ) {
+                $lkpp_categ_name = $term->name;
+                $lkpp_categ_id = get_term_meta($term->term_id, 'lkpp_product_category_id', true);
+                $return[] = array( $lkpp_categ_id, $lkpp_categ_name );
+            }
+        }
+        echo json_encode( $return );
+        die;
+    }
+
 }
 endif;
 
