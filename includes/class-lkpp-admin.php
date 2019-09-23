@@ -97,7 +97,35 @@ class Lkpp_Admin {
      */
     function lkpp_options_product_tab_content() {
 
-	    global $post;
+        global $post, $wpdb, $thepostid, $woocommerce;
+        
+        $lkpp_active = get_post_meta( $post->ID, 'lkpp_active', true );
+
+        if (trim($lkpp_active) == '') {
+            update_post_meta($post->ID, 'lkpp_active', 'inactive');
+            $lkpp_active = 'inactive';
+        }
+
+        $lkpp_publish = get_post_meta( $post->ID, 'lkpp_publish', true );
+
+        if (trim($lkpp_publish) == '') {
+            update_post_meta($post->ID, 'lkpp_publish', 'unpublish');
+            $warranty_type_value = 'unpublish';
+        }
+
+        $local_product = get_post_meta( $post->ID, 'local_product', true );
+
+        if (trim($lkpp_active) == '') {
+            update_post_meta($post->ID, 'local_product', 'no');
+            $lkpp_active = 'no';
+        }
+
+        $tkdn = get_post_meta( $post->ID, 'tkdn', true );
+        
+        if (trim($tkdn) == '') {
+            update_post_meta($post->ID, 'tkdn', '0');
+            $tkdn = '0';
+        }
 	
 	    // Note the 'id' attribute needs to match the 'target' parameter set above
         ?>
