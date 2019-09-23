@@ -156,7 +156,7 @@ class Lkpp_Admin {
                 ?>
                 <p class="form-field lkpp_product_category_id">
                     <label for="lkpp_product_category_id"><?php _e( 'LKPP Product Category', 'woocommerce' ); ?></label>
-                    <select id="lkpp_product_category_id" name="lkpp_product_category_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Category&hellip;', 'woocommerce' ); ?>">
+                    <select id="lkpp_product_category_id" name="lkpp_product_category_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Category&hellip;', 'woocommerce' ); ?>" style="width:99%;max-width:25em;">
 	                    <?php
         
                             $lkpp_product_category_id = get_post_meta( $post->ID, 'lkpp_product_category_id', true );
@@ -181,12 +181,11 @@ class Lkpp_Admin {
 		                    }
 	                    ?>
                     </select> 
-                    <img class="help_tip" data-tip='<?php _e( 'Your description here', 'woocommerce' ) ?>' src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
                 </p>
 
                 <p class="form-field lkpp_brand_id">
                     <label for="lkpp_brand_id"><?php _e( 'LKPP Product Brand', 'woocommerce' ); ?></label>
-                    <select id="lkpp_brand_id" name="lkpp_brand_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>">
+                    <select id="lkpp_brand_id" name="lkpp_brand_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>" style="width:99%;max-width:25em;">
 	                    <?php
         
                             $lkpp_brand_id = get_post_meta( $post->ID, 'lkpp_brand_id', true );
@@ -211,7 +210,6 @@ class Lkpp_Admin {
 		                    }
 	                    ?>
                     </select> 
-                    <img class="help_tip" data-tip='<?php _e( 'Your description here', 'woocommerce' ) ?>' src="<?php echo $woocommerce->plugin_url(); ?>/assets/images/help.png" height="16" width="16" />
                 </p>
                 <?php 
                 
