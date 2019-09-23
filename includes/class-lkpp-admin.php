@@ -231,7 +231,7 @@ class Lkpp_Admin {
         wp_enqueue_script('select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array('jquery') );
      
         // please create also an empty JS file in your theme directory and include it too
-        wp_enqueue_script('lkpp_admin', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery', 'select2' ) ); 
+        wp_enqueue_script('lkpp_admin', get_stylesheet_directory_uri() . '/admin.js', array( 'jquery', 'select2' ) ); 
      
     }
 
