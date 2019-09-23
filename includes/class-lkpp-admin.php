@@ -106,6 +106,16 @@ class Lkpp_Admin {
             <div class='options_group'>
                 <?php
 
+                    woocommerce_wp_select( array( 
+                        'id'      => '_lkpp_active', 
+                        'label'   => __( 'LKPP Active', 'woocommerce' ), 
+                        'options' => array(
+                            'active'   => __( 'Active', 'woocommerce' ),
+                            'inactive'   => __( 'Inactive', 'woocommerce' )
+                            )
+                        )
+                    );
+
 			        woocommerce_wp_checkbox( array(
 				        'id' 		=> '_allow_personal_message',
 				        'label' 	=> __( 'Allow the customer to add a personal message', 'woocommerce' ),
