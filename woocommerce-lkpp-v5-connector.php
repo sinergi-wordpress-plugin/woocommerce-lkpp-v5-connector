@@ -174,14 +174,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
         if (trim($lkpp_publish) == '') {
             update_post_meta($post->ID, 'lkpp_publish', 'unpublish');
-            $warranty_type_value = 'unpublish';
+            $lkpp_publish = 'unpublish';
         }
 
         $local_product = get_post_meta( $post->ID, 'local_product', true );
 
-        if (trim($lkpp_active) == '') {
+        if (trim($local_product) == '') {
             update_post_meta($post->ID, 'local_product', 'no');
-            $lkpp_active = 'no';
+            $local_product = 'no';
         }
 
         $tkdn = get_post_meta( $post->ID, 'tkdn', true );
@@ -276,7 +276,23 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     </select> 
                 </p>
                 <?php 
-                
+                    woocommerce_wp_select( array( 
+                        'id'      => 'local_product', 
+                        'label'   => __( 'Produk Lokal', 'woocommerce' ), 
+                        'options' => array(
+                            'yes'   => __( 'Yes', 'woocommerce' ),
+                            'no'   => __( 'No', 'woocommerce' )
+                            )
+                        )
+                    );
+
+                    woocommerce_wp_text_input( 
+                        array( 
+                            'id'          => 'tkdn', 
+                            'label'       => __( 'Tingkat Komponen Dalam Negeri', 'woocommerce' ), 
+                            'placeholder' => 'Input nilai persentase tingkat komponen dalam negeri'
+                        )
+                    );
                 ?>
             </div>
 
