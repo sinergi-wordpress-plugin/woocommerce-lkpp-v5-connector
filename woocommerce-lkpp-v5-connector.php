@@ -37,10 +37,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
     define( 'LKPP_CONNECTOR', plugin_dir_path( __FILE__ ) );
-
-    require_once (LKPP_CONNECTOR . 'includes/class-lkpp-admin.php');
     
     add_action( 'init', 'create_lkpp_category_taxonomy', 0 );
+
+    require_once (LKPP_CONNECTOR . 'includes/class-lkpp-admin.php');
 
     /**
     * Add LKPP product category taxonomies
