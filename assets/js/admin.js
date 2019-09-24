@@ -63,5 +63,9 @@ jQuery(function($){
           cache: true
       },
       minimumInputLength: 3 // the minimum of symbols to input before perform a search
-  });
+    });
+
+    $('.lkpp_expired_date').datepicker({
+        dateFormat : 'yy-mm-dd'
+    });
 });

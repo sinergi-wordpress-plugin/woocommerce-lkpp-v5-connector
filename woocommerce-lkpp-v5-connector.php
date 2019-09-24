@@ -190,6 +190,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             update_post_meta($post->ID, 'tkdn', '0');
             $tkdn = '0';
         }
+
+        $lkpp_price = get_post_meta( $post->ID, 'lkpp_price', true );
+
+        if (trim($lkpp_price) == '') {
+            update_post_meta($post->ID, 'lkpp_price', '0');
+            $lkpp_price = '0';
+        }
+
+        $lkpp_disc = get_post_meta( $post->ID, 'lkpp_disc', true );
+
+        if (trim($lkpp_disc) == '') {
+            update_post_meta($post->ID, 'lkpp_disc', '0');
+            $lkpp_disc = '0';
+        }
+
+        $lkpp_stock = get_post_meta( $post->ID, 'lkpp_stock', true );
+
+        if (trim($lkpp_stock) == '') {
+            update_post_meta($post->ID, 'lkpp_stock', '0');
+            $lkpp_stock = '0';
+        }
 	
 	    // Note the 'id' attribute needs to match the 'target' parameter set above
         ?>
@@ -289,11 +310,40 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     woocommerce_wp_text_input( 
                         array( 
                             'id'          => 'tkdn', 
-                            'label'       => __( 'Tingkat Komponen Dalam Negeri', 'woocommerce' ), 
+                            'label'       => __( 'Tingkat Komponen Dalam Negeri (%)', 'woocommerce' ), 
                             'placeholder' => 'Input nilai persentase tingkat komponen dalam negeri'
                         )
                     );
                 ?>
+            </div>
+
+            <div class='options_group'>
+                <?php 
+                    woocommerce_wp_text_input( 
+                        array( 
+                            'id'          => 'lkpp_price', 
+                            'label'       => __( 'Harga LKPP (Inc PPN)', 'woocommerce' ), 
+                        )
+                    );
+
+                    woocommerce_wp_text_input( 
+                        array( 
+                            'id'          => 'lkpp_disc', 
+                            'label'       => __( 'persentase Diskon', 'woocommerce' ), 
+                        )
+                    );
+
+                    woocommerce_wp_text_input( 
+                        array( 
+                            'id'          => 'lkpp_stock', 
+                            'label'       => __( 'Stock LKPP', 'woocommerce' ), 
+                        )
+                    );
+                ?>
+                <p class="form-field lkpp_expired_date">
+                    <label for="lkpp_expired_date"><?php _e( 'Harga Berlaku Hingga', 'woocommerce' ); ?></label>
+                    <input type="text" id="lkpp_expired_date" name="lkpp_expired_date[datepicker]" value="" class="lkpp_expired_date" />
+                </p>
             </div>
 
         </div>
@@ -302,12 +352,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
 
     /**
-     * Load Select 2 and JS Script.
+     * Load JS Script.
      */
     function admin_scripts(){
- 
-        //wp_enqueue_style('select2-lkpp', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css' );
-        //wp_enqueue_script('select2-lkpp', 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js', array('jquery') );
      
         // please create also an empty JS file in your theme directory and include it too
         wp_enqueue_script('lkpp_admin', 'https://stage.spakat.id/wp-content/plugins/woocommerce-lkpp-v5-connector-0.0.2_1/assets/js/admin.js', array( 'jquery', 'select2' ) ); 
