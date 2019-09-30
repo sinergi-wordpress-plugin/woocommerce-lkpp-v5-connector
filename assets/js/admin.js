@@ -64,8 +64,18 @@ jQuery(function($){
       },
       minimumInputLength: 3 // the minimum of symbols to input before perform a search
     });
-
+    
+    // render datepicker
     $('.lkpp_expired_date').datepicker({
         dateFormat : 'yy-mm-dd'
     });
+
+    // Hide or Show tkdn field
+    $("#local_product").change(function() {
+        $(".tkdn_field").hide();
+
+        if ($(this).val() == "yes") {
+            $(".tkdn_field").show();
+        }
+    }).change();
 });

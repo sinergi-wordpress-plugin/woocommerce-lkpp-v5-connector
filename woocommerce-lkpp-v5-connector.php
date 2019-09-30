@@ -396,8 +396,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             else
                 delete_post_meta( $post_id, 'local_product' );
                 
-            if( isset( $_POST['tkdn'] ) )
-                update_post_meta( $post_id, 'tkdn', $_POST['tkdn'] );
+            if( isset( $_POST['tkdn'] ) ) {
+                if(isset( $_POST['local_product'] ) && ($_POST['local_product'] == 'yes') ) {
+                    update_post_meta( $post_id, 'tkdn', $_POST['tkdn'] );
+                }
+                else {
+                    update_post_meta( $post_id, 'tkdn', '0' );
+                }
+            }
             else
                 delete_post_meta( $post_id, 'tkdn' ); 
                 
