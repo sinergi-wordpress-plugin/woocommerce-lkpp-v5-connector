@@ -44,6 +44,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     add_action( 'admin_enqueue_scripts', 'admin_scripts');
     add_action( 'wp_ajax_lkppgetcateg', 'lkpp_get_categ_callback');
     add_action( 'wp_ajax_lkppgetbrand', 'lkpp_get_brand_callback');
+    add_action( 'save_post', 'lkpp_save_metaboxdata', 10, 2 );
 
     function render_panel() {
         add_filter( 'woocommerce_product_data_tabs', 'lkpp_product_tabs');
@@ -208,8 +209,18 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         $lkpp_stock = get_post_meta( $post->ID, 'lkpp_stock', true );
 
         if (trim($lkpp_stock) == '') {
-            update_post_meta($post->ID, 'lkpp_stock', '0');
-            $lkpp_stock = '0';
+            update_post_meta($post->ID, 'lkpp_stock', '10');
+            $lkpp_stock = '10';
+        }
+
+        $lkpp_expired = get_post_meta( $post->ID, 'lkpp_expired_date', true );
+
+        if (trim($lkpp_expired_date) == '') {
+
+            date_default_timezone_set('Asia/Jakarta');
+            $default_date = date('Y-m-d', strtotime('+1 month'));
+            update_post_meta($post->ID, 'lkpp_expired_date', $default_date);
+            $lkpp_expired_date = $default_date;
         }
 	
 	    // Note the 'id' attribute needs to match the 'target' parameter set above
@@ -241,7 +252,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 ?>
                 <p class="form-field lkpp_product_category_id">
                     <label for="lkpp_product_category_id"><?php _e( 'LKPP Product Category', 'woocommerce' ); ?></label>
-                    <select id="lkpp_product_category_id" name="lkpp_product_category_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Category&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
+                    <select id="lkpp_product_category_id" name="lkpp_product_category_id" data-placeholder="<?php _e( 'Search for LKPP Product Category&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
 	                    <?php
         
                             $lkpp_product_category_id = get_post_meta( $post->ID, 'lkpp_product_category_id', true );
@@ -270,7 +281,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
                 <p class="form-field lkpp_brand_id">
                     <label for="lkpp_brand_id"><?php _e( 'LKPP Product Brand', 'woocommerce' ); ?></label>
-                    <select id="lkpp_brand_id" name="lkpp_brand_id[]" data-placeholder="<?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
+                    <select id="lkpp_brand_id" name="lkpp_brand_id" data-placeholder="<?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
 	                    <?php
         
                             $lkpp_brand_id = get_post_meta( $post->ID, 'lkpp_brand_id', true );
@@ -289,8 +300,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                                         'taxonomy'  => 'lkpp_product_brand',
                                         )
                                 );
-                                $lkpp_brand_name = $lkpp_brand->name;
-				                echo '<option value="' . $lkpp_product_brand . '" selected="selected">' . $lkpp_brand_name . '</option>';
+                                $lkpp_brand_name = $lkpp_brand[0]->name;
+				                echo '<option value="' . $lkpp_brand_id . '" selected="selected">' . $lkpp_brand_name . '</option>';
 			                    
 		                    }
 	                    ?>
@@ -342,13 +353,75 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 ?>
                 <p class="form-field lkpp_expired_date">
                     <label for="lkpp_expired_date"><?php _e( 'Harga Berlaku Hingga', 'woocommerce' ); ?></label>
-                    <input type="text" id="lkpp_expired_date" name="lkpp_expired_date[datepicker]" value="" class="lkpp_expired_date" />
+                    <input type="text" id="lkpp_expired_date" name="lkpp_expired_date" value="<?php echo esc_attr($lkpp_expired_date); ?>" class="lkpp_expired_date" />
                 </p>
             </div>
 
         </div>
         <?php
 
+    }
+
+    /**
+     * Saving custom field to database
+     */
+    function lkpp_save_metaboxdata( $post_id, $post ) {
+ 
+        if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) return $post_id;
+     
+        // if post type is different from our selected one, do nothing
+        if ( $post->post_type == 'product' ) {
+            if( isset( $_POST['lkpp_active'] ) )
+                update_post_meta( $post_id, 'lkpp_active', $_POST['lkpp_active'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_active' );
+     
+            if( isset( $_POST['lkpp_publish'] ) )
+                update_post_meta( $post_id, 'lkpp_publish', $_POST['lkpp_publish'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_publish' );
+
+            if( isset( $_POST['lkpp_product_category_id'] ) )
+                update_post_meta( $post_id, 'lkpp_product_category_id', $_POST['lkpp_product_category_id'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_product_category_id' );
+
+            if( isset( $_POST['lkpp_brand_id'] ) )
+                update_post_meta( $post_id, 'lkpp_brand_id', $_POST['lkpp_brand_id'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_brand_id' );
+                
+            if( isset( $_POST['local_product'] ) )
+                update_post_meta( $post_id, 'local_product', $_POST['local_product'] );
+            else
+                delete_post_meta( $post_id, 'local_product' );
+                
+            if( isset( $_POST['tkdn'] ) )
+                update_post_meta( $post_id, 'tkdn', $_POST['tkdn'] );
+            else
+                delete_post_meta( $post_id, 'tkdn' ); 
+                
+            if( isset( $_POST['lkpp_price'] ) )
+                update_post_meta( $post_id, 'lkpp_price', $_POST['lkpp_price'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_price' );
+                
+            if( isset( $_POST['lkpp_disc'] ) )
+                update_post_meta( $post_id, 'lkpp_disc', $_POST['lkpp_disc'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_disc' );  
+                
+            if( isset( $_POST['lkpp_stock'] ) )
+                update_post_meta( $post_id, 'lkpp_stock', $_POST['lkpp_stock'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_stock' );
+                
+            if( isset( $_POST['lkpp_expired_date'] ) )
+                update_post_meta( $post_id, 'lkpp_expired_date', $_POST['lkpp_expired_date'] );
+            else
+                delete_post_meta( $post_id, 'lkpp_expired_date' );
+        }
+        return $post_id;
     }
 
     /**
@@ -394,7 +467,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         if( ! empty( $search_results->terms ) ) {
             foreach ( $search_results->terms as $term ) {
                 $lkpp_categ_name = $term->name;
-                $lkpp_categ_id = $term->term_id; // get_term_meta($term->term_id, 'lkpp_product_category_id', true);
+                $lkpp_categ_id = get_term_meta($term->term_id, 'lkpp_product_category_id', true);
                 $return[] = array( $lkpp_categ_id, $lkpp_categ_name );
             }
         }
@@ -434,9 +507,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
         if( ! empty( $search_results->terms ) ) {
             foreach ( $search_results->terms as $term ) {
-                $lkpp_categ_name = $term->name;
-                $lkpp_categ_id = $term->term_id; // get_term_meta($term->term_id, 'lkpp_product_category_id', true);
-                $return[] = array( $lkpp_categ_id, $lkpp_categ_name );
+                $lkpp_brand_name = $term->name;
+                $lkpp_brand_id = get_term_meta($term->term_id, 'lkpp_brand_id', true);
+                $return[] = array( $lkpp_brand_id, $lkpp_brand_name );
             }
         }
         echo json_encode( $return );
