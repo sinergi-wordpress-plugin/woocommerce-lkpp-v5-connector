@@ -9,21 +9,21 @@ if( ! class_exists( 'ProductListTable' ) ) {
 }
 
 ?>
+<style type="text/css">
+    table.wp-list-table td.column-thumb img {
+        margin: 0;
+        width: auto;
+        height: auto;
+        max-width: 40px;
+        max-height: 40px;
+        vertical-align: middle;
+    }
+</style>
 <div class="wrap">
     <h2>LKPP Product List</h2>
-    <div id="poststuff">
-		<div id="post-body" class="metabox-holder columns-2">
-			<div id="post-body-content">
-				<div class="meta-box-sortables ui-sortable">
-				    <form method="post">
+    
                         <?php
                         $product_list_table = new ProductListTable();
 						$product_list_table->prepare_items();
 						$product_list_table->display(); ?>
-					</form>
-				</div>
-			</div>
-		</div>
-		<br class="clear">
-	</div>
 </div>

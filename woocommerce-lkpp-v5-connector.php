@@ -413,7 +413,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         );
 
         add_submenu_page ( 
-            'lkpp-product',
+            'lkpp-products',
             'LKPP Settings',
             'Settings',
             'manage_options',

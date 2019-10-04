@@ -58,14 +58,30 @@ class ProductListTable extends WP_List_Table {
     function column_default( $item, $column_name ) {
         switch( $column_name ) { 
           case 'thumb':
-            return '<a href="' . esc_url( get_edit_post_link( $item->get_id() ) ) . '">' . $item->get_image( 'thumbnail' ) . '</a>'; // WPCS: XSS ok.
-          //case 'author':
-          //case 'isbn':
-            //return $item[ $column_name ];
+            return '<a href="' . esc_url( get_edit_post_link( $item->get_id() ) ) . '">' . $item->get_image( 'woocommerce_thumbnail' ) . '</a>'; // WPCS: XSS ok.
+          case 'name':
+            return '<a href="' . esc_url( get_edit_post_link( $item->get_id() ) ) . '">' . $item->get_name() . '</a>'; // WPCS: XSS ok.
+          case 'sku':
+            return $item->get_sku();
+          case 'lkpp_price':
+            return get_post_meta($item->get_id(),'lkpp_price', true);
+          case 'lkpp_disc':
+          return get_post_meta($item->get_id(),'lkpp_disc', true);
+          case 'lkpp_publish':
+            return get_post_meta($item->get_id(),'lkpp_publish', true);
           //default:
             //return print_r( $item, true ) ; //Show the whole array for troubleshooting purposes
         }
-      }
+    }
+
+    /**
+     * Render row checkboxes
+     */
+    function column_cb($item) {
+        return sprintf(
+            '<input type="checkbox" name="lkpp_product[]" value="%s" />', $item->get_id()
+        );    
+    }
 }
 endif;
 

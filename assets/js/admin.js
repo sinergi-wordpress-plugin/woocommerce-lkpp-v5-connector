@@ -1,4 +1,6 @@
-jQuery(function($){
+jQuery(document).ready(function($){
+
+    "use strict";
 	// simple multiple select
     // $('#lkpp_product_category_id').select2();
     // $('#lkpp_brand_id').select2();
