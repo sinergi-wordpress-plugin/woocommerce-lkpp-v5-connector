@@ -45,7 +45,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     add_action( 'wp_ajax_lkppgetcateg', 'lkpp_get_categ_callback');
     add_action( 'wp_ajax_lkppgetbrand', 'lkpp_get_brand_callback');
     add_action( 'save_post', 'lkpp_save_metaboxdata', 10, 2 );
-    add_action( 'admin_menu','lkpp_admin_menu');
+    add_action( 'admin_menu','lkpp_admin_settings_menu');
+    
 
     function render_panel() {
         add_filter( 'woocommerce_product_data_tabs', 'lkpp_product_tabs');
@@ -391,23 +392,33 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     /**
      * Admin menu and page creation
      */
-    function lkpp_admin_menu() {
-        add_menu_page ( 
-            'LKPP',
+    function lkpp_admin_settings_menu() {
+
+        add_menu_page(
+            'LKPP E-Catalogue V5 Connector',
             'LKPP',
             'edit_posts',
-            'lkpp-admin',
-            'lkpp_product_page_callback' ,
+            'lkpp-products',
+            'lkpp_product_page_callback',
             'dashicons-screenoptions'
         );
 
-        add_submenu_page ( 
-            'lkpp-admin',
+        add_submenu_page(
+            'lkpp-products',
             'LKPP Products',
-            'LKPP Products',
+            'All Products',
             'edit_posts',
-            'odoo-webhook-settings',
+            'lkpp-products',
             'lkpp_product_page_callback'
+        );
+
+        add_submenu_page ( 
+            'lkpp-product',
+            'LKPP Settings',
+            'Settings',
+            'manage_options',
+            'lkpp-settings-page',
+            'lkpp_settings_page_callback'
         );
     }
 
@@ -416,5 +427,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
      */
     function lkpp_product_page_callback() {
         include LKPP_CONNECTOR . 'templates/lkpp-product-page.php';
+    }
+
+    /**
+     * Admin menu product category page renderer callback
+     */
+    function lkpp_product_category_page_callback() {
+        include LKPP_CONNECTOR . 'templates/lkpp-category-page.php';
+    }
+
+    /**
+     * Admin menu brand page renderer callback
+     */
+    function lkpp_brand_page_callback() {
+        include LKPP_CONNECTOR . 'templates/lkpp-brand-page.php';
+    }
+
+    /**
+     * Admin menu settings page renderer callback
+     */
+    function lkpp_settings_page_callback() {
+        include LKPP_CONNECTOR . 'templates/lkpp-settings-page.php';
     }
 }   
