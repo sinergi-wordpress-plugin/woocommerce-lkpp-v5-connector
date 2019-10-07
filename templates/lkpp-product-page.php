@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 if( ! class_exists( 'ProductListTable' ) ) {
     require_once( LKPP_CONNECTOR . 'includes/class-lkpp-product-page.php' );
-}
+}   
 ?>
 <style type="text/css">
     table.wp-list-table td.column-thumb img {
@@ -18,9 +18,11 @@ if( ! class_exists( 'ProductListTable' ) ) {
 </style>
 <div class="wrap">
     <h2>LKPP Product List</h2>
-    
-                        <?php
-                        $product_list_table = new ProductListTable();
-						$product_list_table->prepare_items();
-						$product_list_table->display(); ?>
+    <form id="lkpp-product-table" method="GET">
+    <?php
+        $product_list_table = new ProductListTable();
+		$product_list_table->prepare_items();
+        $product_list_table->display(); 
+    ?>
+    </form>
 </div>

@@ -3,7 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 if( ! class_exists( 'WP_List_Table' ) ) {
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
-if ( !class_exists( 'ProductListTable' ) ):
 class ProductListTable extends WP_List_Table {
     
     /** Class constructor */
@@ -11,7 +10,7 @@ class ProductListTable extends WP_List_Table {
         parent::__construct( [
 		    'singular' => __( 'Product', 'woocommerce' ), //singular name of the listed records
 		    'plural'   => __( 'Products', 'woocommerce' ), //plural name of the listed records
-		    'ajax'     => false //should this table support ajax?
+		    'ajax'     => true //should this table support ajax?
 		] );
 	}
     
@@ -28,7 +27,6 @@ class ProductListTable extends WP_List_Table {
             $columns['sku'] = __( 'SKU', 'woocommerce' );
         }
         $columns['lkpp_price'] = __( 'Harga LKPP', 'woocommerce' );
-        $columns['lkpp_disc'] = __( 'Discount', 'woocommerce' );
         $columns['lkpp_product_category'] = __( 'LKPP Product Category', 'woocommerce' );
         $columns['lkpp_product_brand'] = __( 'Brand', 'woocommerce' );
         $columns['lkpp_publish'] = __( 'Status', 'woocommerce' );
@@ -48,27 +46,7 @@ class ProductListTable extends WP_List_Table {
             'lkpp_active' => 'active'
         ) );
     }
-    /**
-     * Render data in table column
-     */
-    function column_default( $item, $column_name ) {
-        switch( $column_name ) { 
-          case 'thumb':
-            return '<a href="' . esc_url( get_edit_post_link( $item->get_id() ) ) . '">' . $item->get_image( 'woocommerce_thumbnail' ) . '</a>'; // WPCS: XSS ok.
-          case 'name':
-            return '<a href="' . esc_url( get_edit_post_link( $item->get_id() ) ) . '">' . $item->get_name() . '</a>'; // WPCS: XSS ok.
-          case 'sku':
-            return $item->get_sku();
-          case 'lkpp_price':
-            return get_post_meta($item->get_id(),'lkpp_price', true);
-          case 'lkpp_disc':
-          return get_post_meta($item->get_id(),'lkpp_disc', true);
-          case 'lkpp_publish':
-            return get_post_meta($item->get_id(),'lkpp_publish', true);
-          //default:
-            //return print_r( $item, true ) ; //Show the whole array for troubleshooting purposes
-        }
-    }
+
     /**
      * Render row checkboxes
      */
@@ -77,6 +55,94 @@ class ProductListTable extends WP_List_Table {
             '<input type="checkbox" name="lkpp_product[]" value="%s" />', $item->get_id()
         );    
     }
+
+    /**
+     * Render row image thumbnail
+     */
+    function column_thumb($item) {
+        return '<a href="' . esc_url( get_edit_post_link( $item->get_id() ) ) . '">' . $item->get_image( 'woocommerce_thumbnail' ) . '</a>'; // WPCS: XSS ok.    
+    }
+
+    /**
+     * Render name column
+     */
+    function column_name($item) {
+
+        $product_name = '<strong>' . $item->get_name() . '</strong>';
+        $actions = [
+            'edit' => sprintf('<a href="%s"> Edit </a>', esc_url( get_edit_post_link( $item->get_id() ) ))
+        ];
+
+        return $product_name . $this->row_actions($actions);    
+    }
+
+    /**
+     * Render SKU column
+     */
+    function column_sku($item) {
+
+        return $item->get_sku();    
+    }
+
+    /**
+     * Render LKPP Price column
+     */
+    function column_lkpp_price($item) {
+
+        return get_post_meta($item->get_id(),'lkpp_price', true);    
+    }
+
+    /**
+     * Render LKPP Category column
+     */
+    function column_lkpp_product_category($item) {
+
+        $lkpp_product_category_id = get_post_meta( $item->get_id(), 'lkpp_product_category_id', true );
+		if ( $lkpp_product_category_id ) {
+		    $lkpp_categ = get_terms( array(
+                'hide_empty' => false, // also retrieve terms which are not used yet
+                'meta_query' => array( array(
+                    'key'       => 'lkpp_product_category_id',
+                    'value'     => $lkpp_product_category_id,
+                    'compare'   => 'LIKE'
+                        )
+                    ),
+                'taxonomy'  => 'lkpp_product_category',
+                )
+            );
+            $lkpp_categ_name = $lkpp_categ[0]->name;
+        }    
+        return $lkpp_categ_name;    
+    }
+
+    /**
+     * Render LKPP Brand column
+     */
+    function column_lkpp_product_brand($item) {
+
+        $lkpp_brand_id = get_post_meta( $item->get_id(), 'lkpp_brand_id', true );
+		if ( $lkpp_brand_id ) {
+		    $lkpp_brand = get_terms( array(
+                'hide_empty' => false, // also retrieve terms which are not used yet
+                'meta_query' => array( array(
+                    'key'       => 'lkpp_brand_id',
+                    'value'     => $lkpp_brand_id,
+                    'compare'   => 'LIKE'
+                        )
+                    ),
+                'taxonomy'  => 'lkpp_product_brand',
+                )
+            );
+            $lkpp_brand_name = $lkpp_brand[0]->name;
+        }    
+        return $lkpp_brand_name ;    
+    }
+
+    /**
+     * Render LKPP Publish column
+     */
+    function column_lkpp_publish($item) {
+
+        return get_post_meta($item->get_id(),'lkpp_publish', true);    
+    }
 }
-endif;
-return new ProductListTable();

@@ -37,6 +37,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
     define( 'LKPP_CONNECTOR', plugin_dir_path( __FILE__ ) );
+
+    /*if( ! class_exists( 'ProductListTable' ) ) {
+        require_once( LKPP_CONNECTOR . 'includes/class-lkpp-product-page.php' );
+    }*/
     
     add_action( 'after_setup_theme', 'create_lkpp_category_taxonomy');
     add_action( 'after_setup_theme', 'create_lkpp_brand_taxonomy');
