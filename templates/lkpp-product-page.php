@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 if( ! class_exists( 'ProductListTable' ) ) {
-    require_once( LKPP_CONNECTOR . 'includes/class-lkpp-product-page.php' );
+    require_once( LKPP_CONNECTOR . '/includes/class-lkpp-product-page.php' );
 }   
 ?>
 <style type="text/css">
@@ -21,7 +21,7 @@ if( ! class_exists( 'ProductListTable' ) ) {
     <form id="lkpp-product-table" method="GET">
     <?php
         $product_list_table = new ProductListTable();
-		$product_list_table->prepare_items();
+		//$product_list_table->prepare_items();
         $product_list_table->display(); 
     ?>
     </form>

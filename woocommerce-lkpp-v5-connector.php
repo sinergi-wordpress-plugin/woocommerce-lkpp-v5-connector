@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  **/
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
-    define( 'LKPP_CONNECTOR', plugin_dir_path( __FILE__ ) );
+    define( 'LKPP_CONNECTOR', dirname( __FILE__ ) );
     
     add_action( 'after_setup_theme', 'create_lkpp_category_taxonomy');
     add_action( 'after_setup_theme', 'create_lkpp_brand_taxonomy');
@@ -46,6 +46,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     add_action( 'wp_ajax_lkppgetbrand', 'lkpp_get_brand_callback');
     add_action( 'save_post', 'lkpp_save_metaboxdata', 10, 2 );
     add_action( 'admin_menu','lkpp_admin_settings_menu');
+    add_action('restrict_manage_posts', 'restrict_listings_by_categ_lkpp');
+    add_filter('parse_query', 'convert_id_to_lkpp_categ_in_query');
+    add_action('restrict_manage_posts', 'restrict_listings_by_brand_lkpp');
+    add_filter('parse_query', 'convert_id_to_lkpp_brand_in_query');
+    require_once (LKPP_CONNECTOR . '/includes/api/lkpp-rest-controller-product.php');
 
     function render_panel() {
         add_filter( 'woocommerce_product_data_tabs', 'lkpp_product_tabs');
@@ -64,7 +69,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     */
  
     function create_lkpp_category_taxonomy() {
- 
+        
+        // Manage Taxonomy Capabilities
+        $capability = array(
+            'manage_terms' => 'edit_posts',
+            'edit_terms' => '',
+            'delete_terms' => '',
+            'assign_terms' => 'edit_posts'
+        );
+
         // Labels part for the GUI
         $labels = array(
             'name' => _x( 'LKPP Product Categories', 'taxonomy general name' ),
@@ -86,13 +99,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
         // set taxonomy option data
         $args = array(
+            'capabilities'              => $capability,
             'labels'                     => $labels,
-            'hierarchical'               => false,
+            'hierarchical'               => true,
             'public'                     => true,
-            'show_ui'                    => false,
+            'show_ui'                    => true,
             'show_admin_column'          => false,
-            'show_in_nav_menus'          => false,
+            'show_in_nav_menus'          => true,
             'show_tagcloud'              => true,
+            'meta_box_cb'                => false
         );
 
         // register taxonomy to woocommerce product object
@@ -107,7 +122,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     */
  
     function create_lkpp_brand_taxonomy() {
- 
+        
+        // Manage Taxonomy Capabilities
+        $capability = array(
+            'manage_terms' => 'edit_posts',
+            'edit_terms' => '',
+            'delete_terms' => '',
+            'assign_terms' => 'edit_posts'
+        );
+
         // Labels part for the GUI
         $labels = array(
             'name' => _x( 'LKPP Product Brand', 'taxonomy general name' ),
@@ -129,13 +152,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
  
         // set taxonomy option data
         $args = array(
+            'capabilities'               => $capability,
             'labels'                     => $labels,
-            'hierarchical'               => false,
+            'hierarchical'               => true,
             'public'                     => true,
-            'show_ui'                    => false,
+            'show_ui'                    => true,
             'show_admin_column'          => false,
-            'show_in_nav_menus'          => false,
+            'show_in_nav_menus'          => true,
             'show_tagcloud'              => true,
+            'meta_box_cb'                => false
         );
 
         // register taxonomy to woocommerce product object
@@ -383,13 +408,45 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             else
                 delete_post_meta( $post_id, 'lkpp_publish' );
 
-            if( isset( $_POST['lkpp_product_category_id'] ) )
+            if( isset( $_POST['lkpp_product_category_id'] ) ) {
                 update_post_meta( $post_id, 'lkpp_product_category_id', $_POST['lkpp_product_category_id'] );
+                $lkpp_categ = get_terms(
+                    array(
+                        'hide_empty' => false, // also retrieve terms which are not used yet
+                        'meta_query' => array(
+                            array(
+                               'key'       => 'lkpp_product_category_id',
+                               'value'     => $_POST['lkpp_product_category_id'],
+                               'compare'   => 'LIKE'
+                            )
+                        ),
+                        'taxonomy'  => 'lkpp_product_category',
+                        )
+                );
+                $lkpp_categ_id = $lkpp_categ[0]->term_id;
+                wp_set_post_terms( $post_id, $lkpp_categ_id, 'lkpp_product_category' );
+            }
             else
                 delete_post_meta( $post_id, 'lkpp_product_category_id' );
 
-            if( isset( $_POST['lkpp_brand_id'] ) )
+            if( isset( $_POST['lkpp_brand_id'] ) ) {
                 update_post_meta( $post_id, 'lkpp_brand_id', $_POST['lkpp_brand_id'] );
+                $lkpp_brand = get_terms(
+                    array(
+                        'hide_empty' => false, // also retrieve terms which are not used yet
+                        'meta_query' => array(
+                            array(
+                               'key'       => 'lkpp_brand_id',
+                               'value'     => $_POST['lkpp_brand_id'],
+                               'compare'   => 'LIKE'
+                            )
+                        ),
+                        'taxonomy'  => 'lkpp_product_brand',
+                        )
+                );
+                $lkpp_brand_id = $lkpp_brand[0]->term_id;
+                wp_set_post_terms( $post_id, $lkpp_brand_id, 'lkpp_product_brand' );
+            }    
             else
                 delete_post_meta( $post_id, 'lkpp_brand_id' );
                 
@@ -557,6 +614,87 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
      * Admin menu page renderer callback
      */
     function lkpp_product_page_callback() {
-        include LKPP_CONNECTOR . 'templates/lkpp-product-page.php';
+        include(LKPP_CONNECTOR . '/templates/lkpp-product-page.php');
+    }
+
+    /**
+     * Admin menu settings page renderer callback
+     */
+    function lkpp_settings_page_callback() {
+        include(LKPP_CONNECTOR . '/templates/lkpp-settings-page.php');
+    }
+
+    /**
+     * Add admin product filter by LKPP Category
+     */
+    function restrict_listings_by_categ_lkpp() {
+        global $typenow;
+        global $wp_query;
+        if ($typenow=='product') {
+            $taxonomy = 'lkpp_product_category';
+            $business_taxonomy = get_taxonomy($taxonomy);
+            wp_dropdown_categories(array(
+                'show_option_all' =>  __("Select LKPP Category"),
+                'taxonomy'        =>  $taxonomy,
+                'name'            =>  'lkpp_product_category',
+                'orderby'         =>  'name',
+                'selected'        =>  (isset( $wp_query->query['lkpp_product_category']) ? $wp_query->query['lkpp_product_category'] : ''),
+                'hierarchical'    =>  true,
+                'depth'           =>  3,
+                'show_count'      =>  false, // Show # listings in parens
+                'hide_empty'      =>  false, // Don't show businesses w/o listings
+            ));
+        }
+    }
+
+    /**
+     * Filter LKPP Category Query
+     */
+    function convert_id_to_lkpp_categ_in_query($query) {
+		global $pagenow;
+		$post_type = 'product'; // change HERE
+		$taxonomy = 'lkpp_product_category'; // change HERE
+		$q_vars = &$query->query_vars;
+		if ($pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == $post_type && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0) {
+			$term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);
+			$q_vars[$taxonomy] = $term->slug;
+		}
+    }
+    
+    /**
+     * Add admin product filter by LKPP Brand
+     */
+    function restrict_listings_by_brand_lkpp() {
+        global $typenow;
+        global $wp_query;
+        if ($typenow=='product') {
+            $taxonomy = 'lkpp_product_brand';
+            $business_taxonomy = get_taxonomy($taxonomy);
+            wp_dropdown_categories(array(
+                'show_option_all' =>  __("Select LKPP Brand"),
+                'taxonomy'        =>  $taxonomy,
+                'name'            =>  'lkpp_product_brand',
+                'orderby'         =>  'name',
+                'selected'        =>  (isset( $wp_query->query['lkpp_product_brand']) ? $wp_query->query['lkpp_product_brand'] : ''),
+                'hierarchical'    =>  true,
+                'depth'           =>  3,
+                'show_count'      =>  false, // Show # listings in parens
+                'hide_empty'      =>  false, // Don't show businesses w/o listings
+            ));
+        }
+    }
+
+    /**
+     * Filter LKPP Brand Query
+     */
+    function convert_id_to_lkpp_brand_in_query($query) {
+		global $pagenow;
+		$post_type = 'product'; // change HERE
+		$taxonomy = 'lkpp_product_brand'; // change HERE
+		$q_vars = &$query->query_vars;
+		if ($pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == $post_type && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0) {
+			$term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);
+			$q_vars[$taxonomy] = $term->slug;
+		}
     }
 }   
