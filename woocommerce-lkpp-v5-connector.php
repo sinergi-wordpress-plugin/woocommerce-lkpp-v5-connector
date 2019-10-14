@@ -50,27 +50,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     add_filter('parse_query', 'convert_id_to_lkpp_categ_in_query');
     add_action('restrict_manage_posts', 'restrict_listings_by_brand_lkpp');
     add_filter('parse_query', 'convert_id_to_lkpp_brand_in_query');
-    //add_action('updated_post_meta', 'update_lkpp_content_date');
     require_once (LKPP_CONNECTOR . '/includes/api/lkpp-rest-controller-product.php');
-
-    /**
-     * Add Content Updated date function
-     * @param Int       $meta_id
-     * @param Int       $post_id
-     * @param String    $meta_key
-     * @param String    $meta_value
-     */
-    function update_lkpp_content_date($meta_id, $post_id, $meta_key, $meta_value){
-        if('lkpp_price' == $meta_key){
-            //date_default_timezone_set('Asia/Jakarta');
-            //$datetime = new DateTime();
-            //$timezone = new DateTimeZone('Asia/Jakarta');
-            //$datetime->setTimezone($timezone);
-            $timestamp = time() + (0 * 7 * 0 * 0);
-            $date = date('Y-m-d H:i:s', $timestamp);
-            update_post_meta($post_id, 'price_update_date', $date);
-        }
-    }
 
     function render_panel() {
         add_filter( 'woocommerce_product_data_tabs', 'lkpp_product_tabs');
