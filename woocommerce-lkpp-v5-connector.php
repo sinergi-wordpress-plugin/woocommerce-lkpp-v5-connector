@@ -239,12 +239,12 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $lkpp_stock = '10';
         }
 
-        $lkpp_expired = get_post_meta( $post->ID, 'lkpp_expired_date', true );
+        $lkpp_expired_date = get_post_meta( $post->ID, 'lkpp_expired_date', true );
 
         if (trim($lkpp_expired_date) == '') {
 
             date_default_timezone_set('Asia/Jakarta');
-            $default_date = date('Y-m-d', strtotime('+1 month'));
+            $default_date = date('Y-m-d', strtotime('+6 month'));
             update_post_meta($post->ID, 'lkpp_expired_date', $default_date);
             $lkpp_expired_date = $default_date;
         }
@@ -358,15 +358,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     woocommerce_wp_text_input( 
                         array( 
                             'id'          => 'lkpp_price', 
-                            'label'       => __( 'Harga LKPP (Inc PPN)', 'woocommerce' ), 
+                            'label'       => __( 'Harga LKPP (Inc PPN)', 'woocommerce' ),
+                            'custom_attributes' => array( 'readonly' => true) 
                         )
                     );
 
                     woocommerce_wp_text_input( 
                         array( 
                             'id'          => 'lkpp_disc', 
-                            'label'       => __( 'persentase Diskon', 'woocommerce' ),
-                            'custom_attributes' => array( 'disabled' => true) 
+                            'label'       => __( 'persentase Diskon', 'woocommerce' ) 
                         )
                     );
 
