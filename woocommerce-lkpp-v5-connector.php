@@ -50,7 +50,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     add_filter('parse_query', 'convert_id_to_lkpp_categ_in_query');
     add_action('restrict_manage_posts', 'restrict_listings_by_brand_lkpp');
     add_filter('parse_query', 'convert_id_to_lkpp_brand_in_query');
+    //add_action('updated_post_meta', 'update_lkpp_content_date');
     require_once (LKPP_CONNECTOR . '/includes/api/lkpp-rest-controller-product.php');
+
+    /**
+     * Add Content Updated date function
+     * @param Int       $meta_id
+     * @param Int       $post_id
+     * @param String    $meta_key
+     * @param String    $meta_value
+     */
+    function update_lkpp_content_date($meta_id, $post_id, $meta_key, $meta_value){
+        if('lkpp_price' == $meta_key){
+            //date_default_timezone_set('Asia/Jakarta');
+            //$datetime = new DateTime();
+            //$timezone = new DateTimeZone('Asia/Jakarta');
+            //$datetime->setTimezone($timezone);
+            $timestamp = time() + (0 * 7 * 0 * 0);
+            $date = date('Y-m-d H:i:s', $timestamp);
+            update_post_meta($post_id, 'price_update_date', $date);
+        }
+    }
 
     function render_panel() {
         add_filter( 'woocommerce_product_data_tabs', 'lkpp_product_tabs');
@@ -248,101 +268,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             update_post_meta($post->ID, 'lkpp_expired_date', $default_date);
             $lkpp_expired_date = $default_date;
         }
-
-        /*$inline =   '// multiple select with AJAX search
-                    $("#lkpp_product_category_id").select2({
-                        ajax: {
-                            url: ajaxurl, // AJAX URL is predefined in WordPress admin
-                            dataType: "json",
-                            delay: 250, // delay in ms while typing when to perform a AJAX search
-                            data: function (params) {
-                                return {
-                                    q: params.term, // search query
-                                    action: "lkppgetcateg" // AJAX action for admin-ajax.php
-                                };
-                            },
-                            processResults: function( data ) {
-                                var options = [];
-                                if ( data ) {
-                                    // data is the array of arrays, and each of them contains ID and the Label of the option
-                                    $.each( data, function( index, text ) { 
-                                        // do not forget that "index" is just auto incremented value
-                                        options.push( { id: text[0], text: text[1]  } );
-                                    });
-                                }
-                                return {
-                                    results: options
-                                };
-                            },
-                            cache: true
-                        },
-                        minimumInputLength: 3 // the minimum of symbols to input before perform a search
-                    });
-        
-                    // multiple select with AJAX search
-                    $("#lkpp_brand_id").select2({
-                        ajax: {
-                            url: ajaxurl, // AJAX URL is predefined in WordPress admin
-                            dataType: "json",
-                            delay: 250, // delay in ms while typing when to perform a AJAX search
-                            data: function (params) {
-                                return {
-                                    q: params.term, // search query
-                                    action: "lkppgetbrand" // AJAX action for admin-ajax.php
-                                };
-                            },
-                            processResults: function( data ) {
-                                var options = [];
-                                if ( data ) {
-                                    // data is the array of arrays, and each of them contains ID and the Label of the option
-                                    $.each( data, function( index, text ) { // do not forget that "index" is just auto incremented value
-                                        options.push( { id: text[0], text: text[1]  } );
-                                    });
-                                }
-                                return {
-                                    results: options
-                                };
-                            },
-                            cache: true
-                        },
-                        minimumInputLength: 3 // the minimum of symbols to input before perform a search
-                    });
-        
-                    // render datepicker
-                    $(".lkpp_expired_date").datepicker({
-                        dateFormat : "yy-mm-dd"
-                    });
-    
-                    // Hide or Show tkdn field
-                    $("#local_product").change(function() {
-                        $(".tkdn_field").hide();
-                        if ($(this).val() == "yes") {
-                            $(".tkdn_field").show();
-                        }
-                    }).change();
-    
-                    // Calculate LKPP Disc Percentage when LKPP price changed
-                    $("#lkpp_price").change(function() {
-                        $lkpp_price_inc = $(this).val();
-                        $web_price = $("#_regular_price").val();
-                        $lkpp_price_exc = Math.round($lkpp_price_inc - ($lkpp_price_inc * (10/100)));
-                        $lkpp_disc = 100 - Math.round(($lkpp_price_exc/$web_price) * 100);
-                        document.getElementById("lkpp_disc").value = $lkpp_disc; 
-                    }).change();
-    
-                    // Calculate LKPP Disc Percentage when Web price changed
-                    $("#_regular_price").change(function() {
-                        $web_price = $(this).val();
-                        $lkpp_price_inc = $("#lkpp_price").val();
-                        $lkpp_price_exc = Math.round($lkpp_price_inc - ($lkpp_price_inc * (10/100)));
-                        $lkpp_disc = 100 - Math.round(($lkpp_price_exc/$web_price) * 100);
-                        document.getElementById("lkpp_disc").value = $lkpp_disc;  
-                    }).change();';
-        if ( function_exists('wc_enqueue_js') ) {
-            wc_enqueue_js( $inline );
-        } else {
-            $woocommerce->add_inline_js( $inline );
-        } */
 	
 	    // Note the 'id' attribute needs to match the 'target' parameter set above
         ?>
@@ -477,7 +402,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     <input type="text" id="lkpp_expired_date" name="lkpp_expired_date" value="<?php echo esc_attr($lkpp_expired_date); ?>" class="lkpp_expired_date" />
                 </p>
             </div>
-
+            <input type="hidden" id="price_update" name="price_update" value="" />            
         </div>
         <?php
     }
@@ -491,6 +416,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
      
         // if post type is different from our selected one, do nothing
         if ( $post->post_type == 'product' ) {
+
             if( isset( $_POST['lkpp_active'] ) )
                 update_post_meta( $post_id, 'lkpp_active', $_POST['lkpp_active'] );
             else
@@ -563,6 +489,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 update_post_meta( $post_id, 'lkpp_price', $_POST['lkpp_price'] );
             else
                 delete_post_meta( $post_id, 'lkpp_price' );
+
+            if(isset($_POST['price_update']) && ($_POST['price_update'] == 'updated')){
+                $date = current_time('Y-m-d H:i:s');
+                update_post_meta( $post_id, 'price_update_date', $date );
+            }
                 
             if( isset( $_POST['lkpp_disc'] ) )
                 update_post_meta( $post_id, 'lkpp_disc', $_POST['lkpp_disc'] );
