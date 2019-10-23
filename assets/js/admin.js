@@ -70,6 +70,7 @@ jQuery(function($){
       minimumInputLength: 3 // the minimum of symbols to input before perform a search
     });
     
+
     // render datepicker
     $('.lkpp_expired_date').datepicker({
         dateFormat : 'yy-mm-dd'
@@ -147,4 +148,5 @@ jQuery(function($){
             document.getElementById('price_update').value = 'updated';
         }
     });
+
 });

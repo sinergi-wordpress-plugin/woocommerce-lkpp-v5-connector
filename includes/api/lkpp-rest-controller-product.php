@@ -40,6 +40,24 @@ function lkpp_active_query_var( $query, $query_vars ) {
 add_filter( 'woocommerce_product_data_store_cpt_get_products_query', 'lkpp_active_query_var', 10, 2 );
 
 /**
+ * Handle a custom 'lkpp_publish' query var to get products with the 'lkpp_publish' meta.
+ * @param array $query - Args for WP_Query.
+ * @param array $query_vars - Query vars from WC_Product_Query.
+ * @return array modified $query
+ */
+function lkpp_publish_query_var( $query, $query_vars ) {
+	if ( ! empty( $query_vars['lkpp_publish'] ) ) {
+		$query['meta_query'][] = array(
+			'key' => 'lkpp_publish',
+			'value' => esc_attr( $query_vars['lkpp_publish'] ),
+		);
+	}
+
+	return $query;
+}
+add_filter( 'woocommerce_product_data_store_cpt_get_products_query', 'lkpp_publish_query_var', 10, 2 );
+
+/**
  * Rest api get all product callback function
  * @param Object $request
  */
@@ -196,7 +214,7 @@ function get_lkpp_product($request){
 					'id_manufaktur' => 0,
 					'berlaku_sampai' => '',
 					'id_penawaran_lkpp' => (int)$settings['lkpp_id'],
-					'id_unit_pengukuran_lkpp' => 7,
+					'id_unit_pengukuran_lkpp' => 3,
 					'deskripsi_singkat' => '',
 					'deskripsi_lengkap' => '',
 					'kuantitas_stok' => 0,
@@ -226,7 +244,12 @@ function get_lkpp_product($request){
 					'tanggal_update' => '',
 				),
 				'lampiran'			=> array(
-					'item' => array(),
+					'item' => array(
+						array(
+							'file' => '',
+							'deskripsi' => '',
+						)
+					),
 					'tanggal_update' => '',
 				)
 			);
@@ -234,7 +257,7 @@ function get_lkpp_product($request){
 			$lkpp_publish = get_post_meta($product_id, 'lkpp_publish', true);
 			$local_product = get_post_meta($product_id, 'local_product', true);
 			$product_data['informasi']['unspsc'] = (int)get_term_meta($product_term[0]->term_id,'unspsc_code',true);
-			$product_data['informasi']['id_kategori_produk_lkpp'] = (int)get_post_meta($product_id, 'lkpp_product_category_id', true);
+			$product_data['informasi']['id_kategori_produk_lkpp'] = (int)get_post_meta($product_id, 'lkpp_categ_id', true);
 			$product_data['informasi']['nama_produk'] = $product->get_name();
 			$product_data['informasi']['no_produk_penyedia'] = $product->get_sku();
 			$product_data['informasi']['id_manufaktur'] = (int)get_post_meta($product_id, 'lkpp_brand_id', true);
@@ -342,7 +365,7 @@ function map_product_data($data){
 			'id_manufaktur' => 0,
 			'berlaku_sampai' => '',
 			'id_penawaran_lkpp' => (int)$settings['lkpp_id'],
-			'id_unit_pengukuran_lkpp' => 7,
+			'id_unit_pengukuran_lkpp' => 3,
 			'deskripsi_singkat' => '',
 			'deskripsi_lengkap' => '',
 			'kuantitas_stok' => 0,
@@ -372,7 +395,12 @@ function map_product_data($data){
 			'tanggal_update' => '',
 		),
 		'lampiran'			=> array(
-			'item' => array(),
+			'item' => array(
+				array(
+					'file' => '',
+					'deskripsi' => '',
+				)
+			),
 			'tanggal_update' => '',
 		)
 	);
@@ -384,7 +412,7 @@ function map_product_data($data){
 		$lkpp_publish = get_post_meta($item_id, 'lkpp_publish', true);
 		$local_product = get_post_meta($item_id, 'local_product', true);
 		$product['informasi']['unspsc'] = (int)get_term_meta($item_term[0]->term_id,'unspsc_code',true);
-		$product['informasi']['id_kategori_produk_lkpp'] = (int)get_post_meta($item_id, 'lkpp_product_category_id', true);
+		$product['informasi']['id_kategori_produk_lkpp'] = (int)get_post_meta($item_id, 'lkpp_categ_id', true);
 		$product['informasi']['nama_produk'] = $item->get_name();
 		$product['informasi']['no_produk_penyedia'] = $item->get_sku();
 		$product['informasi']['id_manufaktur'] = (int)get_post_meta($item_id, 'lkpp_brand_id', true);
@@ -465,10 +493,10 @@ function get_product_image_url($item){
 	$featured_image_id = $item->get_image_id();
 	$image_gallery_ids = $item->get_gallery_image_ids();
 	$featured_image_urls = array(
-		'50' 	=> wp_get_attachment_image_src( $featured_image_id, 'thumbnail')[0],
-		'100'	=> wp_get_attachment_image_src( $featured_image_id, 'thumbnail')[0],
+		'50' 	=> wp_get_attachment_image_src( $featured_image_id, 'shop_thumbnail')[0],
+		'100'	=> wp_get_attachment_image_src( $featured_image_id, 'shop_thumbnail')[0],
 		'300'	=> wp_get_attachment_image_src( $featured_image_id, 'medium')[0],
-		'800'	=> wp_get_attachment_url($featured_image_id) 
+		'800'	=> wp_get_attachment_image_src( $featured_image_id, 'large')[0] 
 	);
 	$gallery_image_url = array(
 		'deskripsi'	=> '',
@@ -478,8 +506,8 @@ function get_product_image_url($item){
 	);
 	$gallery_image_urls = array();
 	foreach($image_gallery_ids as $id){
-		$gallery_image_url['50'] = wp_get_attachment_image_src( $id, 'thumbnail')[0];
-		$gallery_image_url['100'] = wp_get_attachment_image_src( $id, 'thumbnail')[0];
+		$gallery_image_url['50'] = wp_get_attachment_image_src( $id, 'shop_thumbnail')[0];
+		$gallery_image_url['100'] = wp_get_attachment_image_src( $id, 'shop_thumbnail')[0];
 		$gallery_image_url['300'] = wp_get_attachment_image_src( $featured_image_id, 'medium')[0];
 		array_push($gallery_image_urls, $gallery_image_url);
 	}

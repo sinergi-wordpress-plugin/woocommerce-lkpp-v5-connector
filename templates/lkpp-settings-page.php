@@ -19,6 +19,7 @@ function lkpp_settings_tabs( $current = 'lkpp_info' ) {
 function save_lkpp_settings($action) {
 
     $settings = get_option('lkpp_settings');
+
     if($action == 'save_lkpp_info') {
         $settings['lkpp_id'] = $_POST['lkpp_id'];
         $settings['lkpp_secret_access'] = $_POST['lkpp_secret_access'];
@@ -159,7 +160,7 @@ if ( isset ( $_GET['tab'] ) ) {
         </div>
         <p class="submit" style="clear: both;">
             <input type="submit" name="Submit"  class="button-primary" value="Save Settings" />
-            <input type="hidden" name="action" value="save_lkpp_settings" />
+            <input type="hidden" name="action" value="save_lkpp_info" />
         </p>
     </form>
     <?php

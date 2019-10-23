@@ -17,11 +17,14 @@ if( ! class_exists( 'ProductListTable' ) ) {
     }
 </style>
 <div class="wrap">
+    <?php $product_list_table = new ProductListTable(); ?>
     <h2>LKPP Product List</h2>
-    <form id="lkpp-product-table" method="GET">
+    <?php $product_list_table->views(); ?>
+    <form id="lkpp-product-table" method="POST">
+    <input type="hidden" name="page" value="lkpp-products" />    
     <?php
-        $product_list_table = new ProductListTable();
-		//$product_list_table->prepare_items();
+        $product_list_table->prepare_items();
+        $product_list_table->search_box('Search SKU', 'search_sku');
         $product_list_table->display(); 
     ?>
     </form>
