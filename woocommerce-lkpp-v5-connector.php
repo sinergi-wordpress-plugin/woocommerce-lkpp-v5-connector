@@ -40,13 +40,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     
     add_action( 'after_setup_theme', 'create_lkpp_category_taxonomy');
     add_action( 'after_setup_theme', 'create_lkpp_brand_taxonomy');
+    add_action( 'after_setup_theme', 'create_lkpp_unit_taxonomy');
     add_action( 'init', 'render_panel');
     add_action( 'admin_enqueue_scripts', 'admin_scripts');
-    add_action( 'admin_enqueue_scripts', 'categ_admin_scripts');
+    add_action( 'admin_enqueue_scripts', 'taxonomy_admin_scripts');
     add_action( 'wp_ajax_lkppgetcateg', 'lkpp_get_categ_callback');
     add_action( 'wp_ajax_lkppgetbrand', 'lkpp_get_brand_callback');
     add_action( 'wp_ajax_lcateg_sync', 'lcateg_sync');
     add_action( 'wp_ajax_lbrand_sync', 'lbrand_sync');
+    add_action( 'wp_ajax_lunit_sync', 'lunit_sync');
     add_action( 'save_post', 'lkpp_save_metaboxdata', 10, 2 );
     add_action( 'admin_menu','lkpp_admin_settings_menu');
     //add_action('restrict_manage_posts', 'restrict_listings_by_categ_lkpp');
@@ -172,6 +174,59 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
 
     /**
+    * Add LKPP product brand taxonomies
+    *
+    * @since 0.0.2
+    */
+ 
+    function create_lkpp_unit_taxonomy() {
+        
+        // Manage Taxonomy Capabilities
+        $capability = array(
+            'manage_terms' => 'manage_options',
+            'edit_terms' => 'manage_options',
+            'delete_terms' => 'manage_options',
+            'assign_terms' => 'manage_options'
+        );
+
+        // Labels part for the GUI
+        $labels = array(
+            'name' => _x( 'LKPP Units', 'taxonomy general name' ),
+            'singular_name' => _x( 'LKPP Unit', 'taxonomy singular name' ),
+            'search_items' =>  __( 'Search LKPP Units' ),
+            'popular_items' => null,
+            'all_items' => __( 'All LKPP Units' ),
+            'parent_item' => null,
+            'parent_item_colon' => null,
+            'edit_item' => null, 
+            'update_item' => null,
+            'add_new_item' => null,
+            'new_item_name' => null,
+            'separate_items_with_commas' => __( 'Separate topics with commas' ),
+            'add_or_remove_items' => __( 'Add or remove topics' ),
+            'choose_from_most_used' => null,
+            'menu_name' => __( 'LKPP Units' ),
+        ); 
+ 
+        // set taxonomy option data
+        $args = array(
+            'capabilities'               => $capability,
+            'labels'                     => $labels,
+            'hierarchical'               => true,
+            'public'                     => true,
+            'show_ui'                    => true,
+            'show_admin_column'          => false,
+            'show_in_nav_menus'          => true,
+            'show_tagcloud'              => true,
+            'meta_box_cb'                => false
+        );
+
+        // register taxonomy to woocommerce product object
+        register_taxonomy( 'lkpp_unit', 'product', $args );
+        register_taxonomy_for_object_type( 'lkpp_unit', 'product' );
+    }
+
+    /**
      * Add a custom product tab.
      */
     function lkpp_product_tabs( $tabs) {
@@ -250,6 +305,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $default_date = date('Y-m-d', strtotime('+6 month'));
             update_post_meta($post->ID, 'lkpp_expired_date', $default_date);
             $lkpp_expired_date = $default_date;
+        }
+
+        $lkpp_unit_id = get_post_meta( $post->ID, 'lkpp_unit_id', true );
+
+        if (trim($lkpp_unit_id) == '') {
+            update_post_meta($post->ID, 'lkpp_unit_id', '3');
+            $lkpp_unit_id = '3';
         }
 	
 	    // Note the 'id' attribute needs to match the 'target' parameter set above
@@ -332,6 +394,26 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				                echo '<option value="' . $lkpp_brand_id . '" selected="selected">' . $lkpp_brand_name . '</option>';
 			                    
 		                    }
+	                    ?>
+                    </select> 
+                </p>
+
+                <p class="form-field lkpp_unit_id">
+                    <label for="lkpp_unit_id"><?php _e( 'Unit Pengukuran', 'woocommerce' ); ?></label>
+                    <select id="lkpp_unit_id" name="lkpp_unit_id" data-placeholder="<?php _e( 'Search for LKPP Unit of Measurement&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
+	                    <?php
+        
+                            $term_query = new WP_Term_Query(array(
+                                'taxonomy' => 'lkpp_unit',
+                                'hide_empty' => false
+                            ));
+                            $terms = $term_query->terms;
+                            foreach($terms as $unit){
+                                $unit_id = get_term_meta($unit->term_id, 'lkpp_unit_id', true);
+                                $lkpp_unit_name = $unit->name;
+                                $selected = $lkpp_unit_id == $unit_id ? 'selected="selected"':'';
+                                echo '<option value="' . $unit_id . '"' . $selected .  '>' . $lkpp_unit_name . '</option>';
+                            }
 	                    ?>
                     </select> 
                 </p>
@@ -456,6 +538,27 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             }    
             else
                 delete_post_meta( $post_id, 'lkpp_brand_id' );
+
+            if( isset( $_POST['lkpp_unit_id'] ) ) {
+                update_post_meta( $post_id, 'lkpp_unit_id', $_POST['lkpp_unit_id'] );
+                $lkpp_unit = get_terms(
+                    array(
+                        'hide_empty' => false, // also retrieve terms which are not used yet
+                        'meta_query' => array(
+                            array(
+                                'key'       => 'lkpp_unit_id',
+                                'value'     => $_POST['lkpp_unit_id'],
+                                'compare'   => 'LIKE'
+                            )
+                        ),
+                        'taxonomy'  => 'lkpp_unit',
+                    )
+                );
+                $lkpp_unit_id = $lkpp_unit[0]->term_id;
+                wp_set_post_terms( $post_id, $lkpp_unit_id, 'lkpp_unit' );
+            }    
+            else
+                delete_post_meta( $post_id, 'lkpp_unit_id' );    
                 
             if( isset( $_POST['local_product'] ) )
                 update_post_meta( $post_id, 'local_product', $_POST['local_product'] );
@@ -511,8 +614,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
      
     }
 
-    function categ_admin_scripts( $hook ) {
-        if ( 'lkpp_page_lkpp-categ-page' == $hook || 'lkpp_page_lkpp-brand-page' == $hook ) {
+    function taxonomy_admin_scripts( $hook ) {
+        if ( 'lkpp_page_lkpp-categ-page' == $hook || 'lkpp_page_lkpp-brand-page' == $hook || 'lkpp_page_lkpp-unit-page' == $hook ) {
             wp_enqueue_script( 'lcateg', plugin_dir_url( __FILE__ ) . 'assets/js/taxonomy-admin.js', array( 'jquery' ) );
             //wp_enqueue_style( 'lhr', LHR_URL . '/assets/css/admin.css' );
             //wp_enqueue_style( 'media-views' );
@@ -802,6 +905,106 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     }
 
     /**
+     * Sync LKPP Unit Ajax.
+     */
+    function lunit_sync(){
+ 
+        $settings = get_option('lkpp_settings');
+        $secret = $settings['lkpp_secret_access'];
+        $url = $settings['lkpp_unit_url'];
+        if(!$secret){
+            $output = array(
+                'message'  => 'secret_failed'
+            );
+    
+            wp_send_json( $output );
+        }
+        if(!$url){
+            $output = array(
+                'message'  => 'url_failed'
+            );
+    
+            wp_send_json( $output );
+        }
+
+        $request_url = $url . '?secret_key=' . $secret;
+        $json = wp_remote_retrieve_body(wp_remote_post($request_url));
+        if($json){
+
+            // Decode JSON response into PHP Array.
+            $data = json_decode($json, true);
+            
+            // Compile LKPP Unit data from LKPP into an Array.
+            $lkpp_units_outside = $data['unit_pengukuran'];
+
+            // Get and compile LKPP Unit data from database into an array.
+            $term_query = new WP_Term_Query(array(
+                'taxonomy' => 'lkpp_unit',
+                'hide_empty'    => false
+            ));
+            $lkpp_units_inside = $term_query->terms;
+
+            // Prepare Array of LKPP Unit ids from LKPP and from database to be compared later. 
+            $lkpp_units_outside_ids = array();
+            $lkpp_units_inside_ids = array();
+
+            // Loop through LKPP Unit list from LKPP to gather all ids into array.
+            foreach($lkpp_units_outside as $unit_outside){
+                $lkpp_unit_outside_id = $unit_outside['id'];
+                $lkpp_units_outside_ids[] = $lkpp_unit_outside_id;
+            }
+
+            // Loop through LKPP Unit list from database to gather all ids into array.
+            foreach($lkpp_units_inside as $unit_inside){
+                $lkpp_unit_inside_id = get_term_meta($unit_inside->term_id, 'lkpp_unit_id', true);
+                $lkpp_units_inside_ids[] = $lkpp_unit_inside_id;
+            }
+
+            foreach($lkpp_units_outside as $unit){
+                if(!in_array($unit['id'], $lkpp_units_inside_ids)){
+                    $lkpp_unit_id = $unit['id'];
+                    $lkpp_unit_name = $unit['deskripsi'];
+                    $term = wp_insert_term($lkpp_unit_name, 'lkpp_unit');
+                    update_term_meta($term['term_id'], 'lkpp_unit_id', $lkpp_unit_id);
+                } else {
+                    $term_query = new WP_Term_Query(array(
+                        'taxonomy' => 'lkpp_unit',
+                        'hide_empty'    => false,
+                        'meta_key' => 'lkpp_unit_id',
+                        'meta_value' => $unit['id']
+                    ));
+                    $term = $term_query->terms[0];
+                    if($term->name !== $unit['deskripsi']){
+                        wp_update_term($term->term_id, 'lkpp_unit', array( 'name' => $unit['deskripsi']));
+                    }
+                }
+                continue;    
+            }
+
+            foreach($lkpp_units_inside as $unit){
+                $lkpp_unit_id = get_term_meta($unit->term_id, 'lkpp_unit_id', true);
+                if(!in_array($lkpp_unit_id, $lkpp_units_outside_ids)){
+                    wp_delete_term($unit->term_id, 'lkpp_unit');
+                }
+                continue;    
+            }
+
+            $output = array(
+                'message'  => 'success'
+            );
+    
+            wp_send_json( $output );
+        } else {
+            $output = array(
+                'message'  => 'failed'
+            );
+    
+            wp_send_json( $output );
+        }
+        
+    }
+
+    /**
      * Admin menu and page creation
      */
     function lkpp_admin_settings_menu() {
@@ -840,6 +1043,14 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         );
         add_submenu_page ( 
             'lkpp-products',
+            'LKPP Unit',
+            'LKPP Unit',
+            'manage_options',
+            'lkpp-unit-page',
+            'lkpp_unit_page_callback'
+        );
+        add_submenu_page ( 
+            'lkpp-products',
             'LKPP Settings',
             'Settings',
             'manage_options',
@@ -867,6 +1078,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
      */
     function lkpp_brand_page_callback() {
         include(LKPP_CONNECTOR . '/templates/lkpp-brand-page.php');
+    }
+
+    /**
+     * Admin LKPP Unit page renderer callback
+     */
+    function lkpp_unit_page_callback() {
+        include(LKPP_CONNECTOR . '/templates/lkpp-unit-page.php');
     }
 
     /**

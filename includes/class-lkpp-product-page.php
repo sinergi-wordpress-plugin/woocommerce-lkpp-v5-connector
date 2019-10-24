@@ -92,10 +92,12 @@ class ProductListTable extends WP_List_Table {
         if ( wc_product_sku_enabled() ) {
             $columns['sku'] = __( 'SKU', 'woocommerce' );
         }
+        $columns['web_price'] = __('Harga Web', 'woocommerce');
         $columns['lkpp_price'] = __( 'Harga LKPP', 'woocommerce' );
         $columns['lkpp_disc'] = __( 'Diskon LKPP', 'woocommerce' );
-        $columns['lkpp_product_category'] = __( 'LKPP Product Category', 'woocommerce' );
-        $columns['lkpp_product_brand'] = __( 'Brand', 'woocommerce' );
+        $columns['lkpp_product_category'] = __( 'LKPP Category', 'woocommerce' );
+        $columns['lkpp_product_brand'] = __( 'LKPP Brand', 'woocommerce' );
+        $columns['lkpp_unit'] = __( 'Satuan Unit', 'woocommerce' );
         $columns['lkpp_publish'] = __( 'Status', 'woocommerce' );
         
         return $columns;
@@ -187,6 +189,16 @@ class ProductListTable extends WP_List_Table {
     }
 
     /**
+     * Render Web Price column
+     */
+    function column_web_price($item) {
+        $web_price_exc = $item->get_regular_price();
+        $web_price_inc = $web_price_exc + ($web_price_exc * 10/100);
+        $column_val = 'Rp ' . number_format ( (float)$web_price_inc , 0 , "," , "." );
+        return $column_val;    
+    }
+
+    /**
      * Render LKPP Price column
      */
     function column_lkpp_price($item) {
@@ -246,6 +258,29 @@ class ProductListTable extends WP_List_Table {
             $lkpp_brand_name = $lkpp_brand[0]->name;
         }    
         return $lkpp_brand_name ;    
+    }
+
+    /**
+     * Render LKPP Unit column
+     */
+    function column_lkpp_unit($item) {
+
+        $lkpp_unit_id = get_post_meta( $item->get_id(), 'lkpp_unit_id', true );
+		if ( $lkpp_unit_id ) {
+		    $lkpp_unit = get_terms( array(
+                'hide_empty' => false, // also retrieve terms which are not used yet
+                'meta_query' => array( array(
+                    'key'       => 'lkpp_unit_id',
+                    'value'     => $lkpp_unit_id,
+                    'compare'   => 'LIKE'
+                        )
+                    ),
+                'taxonomy'  => 'lkpp_unit',
+                )
+            );
+            $lkpp_unit_name = $lkpp_unit[0]->name;
+        }    
+        return $lkpp_unit_name ;    
     }
 
     /**

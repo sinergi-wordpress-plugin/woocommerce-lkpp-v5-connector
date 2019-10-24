@@ -45,4 +45,26 @@
         });
     });
 
+    $(function() {
+        $('.lunit-sync').on('click', function(){
+            $(this).text('Synchronizing...').attr('disabled', 'disabled').removeClass('button-primary');
+            $.post(ajaxurl, {
+                'action': 'lunit_sync'
+            }, function(data) {
+                if(data.message == 'success'){
+                    window.location.reload(true);
+                } else if(data.message == 'failed'){
+                    $('.lunit-sync').text('Synchronize Brand').removeAttr('disabled').addClass('button-primary');
+                    alert('Failed to sync LKPP Unit');
+                } else if(data.message == 'secret_failed'){
+                    $('.lunit-sync').text('Synchronize Brand').removeAttr('disabled').addClass('button-primary');
+                    alert('Please input secret access');
+                } else if(data.message == 'url_failed'){
+                    $('.lunit-sync').text('Synchronize Brand').removeAttr('disabled').addClass('button-primary');
+                    alert('Please input request URL');
+                }
+            }, 'json');
+        });
+    });
+
 })(jQuery);

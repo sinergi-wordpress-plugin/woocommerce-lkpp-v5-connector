@@ -25,6 +25,7 @@ function save_lkpp_settings($action) {
         $settings['lkpp_secret_access'] = $_POST['lkpp_secret_access'];
         $settings['lkpp_categ_url'] = $_POST['lkpp_categ_url'];
         $settings['lkpp_brand_url'] = $_POST['lkpp_brand_url'];
+        $settings['lkpp_unit_url'] = $_POST['lkpp_unit_url'];
         $success = add_option( 'lkpp_settings', $settings, '', 'no' );
         if ( ! $success ) {
             $success = update_option( 'lkpp_settings', $settings );
@@ -93,6 +94,12 @@ if ( isset ( $_GET['tab'] ) ) {
                     </div>
                     <input type="text" name="lkpp_brand_url" value="<?php echo esc_attr($settings['lkpp_brand_url']); ?>" style="width:25%; margin-left:10px;"/>
                 </p>
+                <p class="form-field">
+                    <div style="width:150px; display:inline-block;">
+                        <label for="lkpp_unit_url" style="width:150px !important;"><?php _e( 'URL Unit LKPP', 'woocommerce' ); ?></label>
+                    </div>
+                    <input type="text" name="lkpp_unit_url" value="<?php echo esc_attr($settings['lkpp_unit_url']); ?>" style="width:25%; margin-left:10px;"/>
+                </p>
             </div>
             <p class="submit" style="clear: both;">
                 <input type="submit" name="Submit"  class="button-primary" value="Save Settings" />
@@ -157,6 +164,12 @@ if ( isset ( $_GET['tab'] ) ) {
                 </div>
                 <input type="text" name="lkpp_brand_url" value="<?php echo esc_attr($settings['lkpp_brand_url']); ?>" style="width:25%; margin-left:10px;"/>
             </p>
+            <p class="form-field">
+                    <div style="width:150px; display:inline-block;">
+                        <label for="lkpp_unit_url" style="width:150px !important;"><?php _e( 'URL Unit LKPP', 'woocommerce' ); ?></label>
+                    </div>
+                    <input type="text" name="lkpp_unit_url" value="<?php echo esc_attr($settings['lkpp_unit_url']); ?>" style="width:25%; margin-left:10px;"/>
+                </p>
         </div>
         <p class="submit" style="clear: both;">
             <input type="submit" name="Submit"  class="button-primary" value="Save Settings" />

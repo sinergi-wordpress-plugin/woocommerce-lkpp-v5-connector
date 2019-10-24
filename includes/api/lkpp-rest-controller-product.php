@@ -214,7 +214,7 @@ function get_lkpp_product($request){
 					'id_manufaktur' => 0,
 					'berlaku_sampai' => '',
 					'id_penawaran_lkpp' => (int)$settings['lkpp_id'],
-					'id_unit_pengukuran_lkpp' => 3,
+					'id_unit_pengukuran_lkpp' => '',
 					'deskripsi_singkat' => '',
 					'deskripsi_lengkap' => '',
 					'kuantitas_stok' => 0,
@@ -262,6 +262,7 @@ function get_lkpp_product($request){
 			$product_data['informasi']['no_produk_penyedia'] = $product->get_sku();
 			$product_data['informasi']['id_manufaktur'] = (int)get_post_meta($product_id, 'lkpp_brand_id', true);
 			$product_data['informasi']['berlaku_sampai'] = get_post_meta($product_id, 'lkpp_expired_date', true);
+			$product_data['informasi']['id_unit_pengukuran_lkpp'] = (int)get_post_meta($product_id, 'lkpp_unit_id', true);
 			$product_data['informasi']['deskripsi_singkat'] = $product->get_short_description();
 			$product_data['informasi']['deskripsi_lengkap'] = $product->get_description();
 			$product_data['informasi']['kuantitas_stok'] = (int)get_post_meta($product_id, 'lkpp_stock', true);
@@ -365,7 +366,7 @@ function map_product_data($data){
 			'id_manufaktur' => 0,
 			'berlaku_sampai' => '',
 			'id_penawaran_lkpp' => (int)$settings['lkpp_id'],
-			'id_unit_pengukuran_lkpp' => 3,
+			'id_unit_pengukuran_lkpp' => '',
 			'deskripsi_singkat' => '',
 			'deskripsi_lengkap' => '',
 			'kuantitas_stok' => 0,
@@ -417,6 +418,7 @@ function map_product_data($data){
 		$product['informasi']['no_produk_penyedia'] = $item->get_sku();
 		$product['informasi']['id_manufaktur'] = (int)get_post_meta($item_id, 'lkpp_brand_id', true);
 		$product['informasi']['berlaku_sampai'] = get_post_meta($item_id, 'lkpp_expired_date', true);
+		$product['informasi']['id_unit_pengukuran_lkpp'] = (int)get_post_meta($item_id, 'lkpp_unit_id', true);
 		$product['informasi']['deskripsi_singkat'] = $item->get_short_description();
 		$product['informasi']['deskripsi_lengkap'] = $item->get_description();
 		$product['informasi']['kuantitas_stok'] = (int)get_post_meta($item_id, 'lkpp_stock', true);
