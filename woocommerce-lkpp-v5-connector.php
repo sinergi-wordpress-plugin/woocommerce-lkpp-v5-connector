@@ -855,7 +855,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 $lkpp_brand_id = $lkpp_brand['id'];
                 $lkpp_brand_name = $lkpp_brand['nama_manufaktur'];
                 $lkpp_brands_ids[] = $lkpp_brand_id;
-                $lkpp_brand_names[] = $lkpp_brand_name;
+                $lkpp_brands_names[] = $lkpp_brand_name;
             }
 
             // Loop through Woo Brand list to gather all lkpp_brand_ids and names into array.
