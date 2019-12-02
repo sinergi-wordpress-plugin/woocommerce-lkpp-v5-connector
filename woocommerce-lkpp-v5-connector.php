@@ -835,57 +835,64 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             $data = json_decode($json, true);
             
             // Compile LKPP Brand data from LKPP into an Array.
-            $lkpp_brands_outside = $data['manufaktur'];
+            $lkpp_brands = $data['manufaktur'];
 
-            // Get and compile LKPP Brand data from database into an array.
+            // Get and compile Woo Brand data from database into an array.
             $term_query = new WP_Term_Query(array(
-                'taxonomy' => 'lkpp_product_brand',
+                'taxonomy' => 'product_brand',
                 'hide_empty'    => false
             ));
-            $lkpp_brands_inside = $term_query->terms;
+            $woo_brands = $term_query->terms;
 
-            // Prepare Array of LKPP Brand ids from LKPP and from database to be compared later. 
-            $lkpp_brands_outside_ids = array();
-            $lkpp_brands_inside_ids = array();
+            // Prepare Array of LKPP Brand ids and names and Woo Brands ids and names to be compared later. 
+            $lkpp_brands_ids = array();
+            $lkpp_brands_names = array();
+            $woo_brands_lkpp_ids = array();
+            $woo_brands_names = array();
 
-            // Loop through LKPP Brand list from LKPP to gather all ids into array.
-            foreach($lkpp_brands_outside as $brand_outside){
-                $lkpp_brand_outside_id = $brand_outside['id'];
-                $lkpp_brands_outside_ids[] = $lkpp_brand_outside_id;
+            // Loop through LKPP Brand list to gather all ids and names into array.
+            foreach($lkpp_brands as $lkpp_brand){
+                $lkpp_brand_id = $lkpp_brand['id'];
+                $lkpp_brand_name = $lkpp_brand['nama_manufaktur'];
+                $lkpp_brands_ids[] = $lkpp_brand_id;
+                $lkpp_brand_names[] = $lkpp_brand_name;
             }
 
-            // Loop through LKPP Brand list from database to gather all ids into array.
-            foreach($lkpp_brands_inside as $brand_inside){
-                $lkpp_brand_inside_id = get_term_meta($brand_inside->term_id, 'lkpp_brand_id', true);
-                $lkpp_brands_inside_ids[] = $lkpp_brand_inside_id;
+            // Loop through Woo Brand list to gather all lkpp_brand_ids and names into array.
+            foreach($woo_brands as $woo_brand){
+                $woo_brand_lkpp_id = get_term_meta($woo_brand->term_id, 'lkpp_brand_id', true);
+                $woo_brands_lkpp_ids[] = $woo_brand_lkpp_id;
+                $woo_brand_name = $woo_brand->name;
+                $woo_brands_names[] = $woo_brand_name;
             }
 
-            foreach($lkpp_brands_outside as $brand){
-                if(!in_array($brand['id'], $lkpp_brands_inside_ids)){
-                    $lkpp_brand_id = $brand['id'];
-                    $lkpp_brand_name = $brand['nama_manufaktur'];
-                    $term = wp_insert_term($lkpp_brand_name, 'lkpp_product_brand');
-                    update_term_meta($term['term_id'], 'lkpp_brand_id', $lkpp_brand_id);
-                } else {
-                    $term_query = new WP_Term_Query(array(
-                        'taxonomy' => 'lkpp_product_brand',
-                        'hide_empty'    => false,
-                        'meta_key' => 'lkpp_brand_id',
-                        'meta_value' => $brand['id']
-                    ));
-                    $term = $term_query->terms[0];
-                    if($term->name !== $brand['nama_manufaktur']){
-                        wp_update_term($term->term_id, 'lkpp_product_brand', array( 'name' => $brand['nama_manufaktur']));
+            foreach($lkpp_brands as $lkpp_brand){
+                if(!in_array($lkpp_brand['id'], $woo_brands_lkpp_ids)){
+                    if(in_array($lkpp_brand['nama_manufaktur'], $woo_brands_names)){
+                        
+                        /** Get Woocommerce Brand id */
+                        $term_query = new WP_Term_Query(array(
+                            'taxonomy' => 'product_brand',
+                            'hide_empty'    => false,
+                            'meta_key' => 'name',
+                            'meta_value' => $brand['nama_manufaktur']
+                        ));
+                        $term = $term_query->terms[0];
+                        $woo_brand_id = $term->term_id;
+                        /** End of Get Woocommerce Brand id */
+
+                        // Add LKPP Brand ID to Woo Brand
+                        update_term_meta($woo_brand_id, 'lkpp_brand_id', $lkpp_brand['id']);
+                    } else {
+
+                        // Create new Brand in Woocommerce
+                        $new_woo_brand = wp_insert_term($lkpp_brand['nama_manufaktur'], 'product_brand');
+                        $new_woo_brand_id = $new_woo_brand['term_id'];
+
+                        // Add LKPP Brand ID to new Brand
+                        update_term_meta($new_woo_brand_id, 'lkpp_brand_id', $lkpp_brand['id']);
                     }
-                }
-                continue;    
-            }
-
-            foreach($lkpp_brands_inside as $brand){
-                $lkpp_brand_id = get_term_meta($brand->term_id, 'lkpp_brand_id', true);
-                if(!in_array($lkpp_brand_id, $lkpp_brands_outside_ids)){
-                    wp_delete_term($brand->term_id, 'lkpp_product_brand');
-                }
+                } 
                 continue;    
             }
 
