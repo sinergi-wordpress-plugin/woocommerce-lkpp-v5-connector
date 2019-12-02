@@ -874,8 +874,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                         $term_query = new WP_Term_Query(array(
                             'taxonomy' => 'product_brand',
                             'hide_empty'    => false,
-                            'meta_key' => 'name',
-                            'meta_value' => $lkpp_brand['nama_manufaktur']
+                            'name__like'  => $lkpp_brand['nama_manufaktur']
                         ));
                         $term = $term_query->terms[0];
                         $woo_brand_id = $term->term_id;
