@@ -871,12 +871,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     if(in_array($lkpp_brand['nama_manufaktur'], $woo_brands_names)){
                         
                         /** Get Woocommerce Brand id */
-                        $term_query = new WP_Term_Query(array(
+                        /*$term_query = new WP_Term_Query(array(
                             'taxonomy' => 'product_brand',
                             'hide_empty'    => false,
                             'name__like'  => $lkpp_brand['nama_manufaktur']
-                        ));
-                        $term = $term_query->terms[0];
+                        ));*/
+                        //$term = $term_query->terms[0];
+                        $term = get_term_by('name', $lkpp_brand['nama_manufaktur'], 'product_brand')
                         $woo_brand_id = $term->term_id;
                         /** End of Get Woocommerce Brand id */
 
