@@ -877,7 +877,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                             'name__like'  => $lkpp_brand['nama_manufaktur']
                         ));*/
                         //$term = $term_query->terms[0];
-                        $term = get_term_by('name', $lkpp_brand['nama_manufaktur'], 'product_brand')
+                        $term = get_term_by('name', $lkpp_brand['nama_manufaktur'], 'product_brand');
                         $woo_brand_id = $term->term_id;
                         /** End of Get Woocommerce Brand id */
 
