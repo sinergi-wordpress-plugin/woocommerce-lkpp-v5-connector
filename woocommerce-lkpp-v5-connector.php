@@ -369,10 +369,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                     </select> 
                 </p>
 
-                <p class="form-field lkpp_brand_id">
-                    <label for="lkpp_brand_id"><?php _e( 'LKPP Product Brand', 'woocommerce' ); ?></label>
-                    <select id="lkpp_brand_id" name="lkpp_brand_id" data-placeholder="<?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
-	                    <?php
+                <!-- <p class="form-field lkpp_brand_id">
+                    <label for="lkpp_brand_id"><//?php _e( 'LKPP Product Brand', 'woocommerce' ); ?></label>
+                    <select id="lkpp_brand_id" name="lkpp_brand_id" data-placeholder="<//?php _e( 'Search for LKPP Product Brand&hellip;', 'woocommerce' ); ?>" style="width:50%;max-width:15em;">
+	                    </*?php
         
                             $lkpp_brand_id = get_post_meta( $post->ID, 'lkpp_brand_id', true );
 		                    if ( $lkpp_brand_id ) {
@@ -393,10 +393,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                                 $lkpp_brand_name = $lkpp_brand[0]->name;
 				                echo '<option value="' . $lkpp_brand_id . '" selected="selected">' . $lkpp_brand_name . '</option>';
 			                    
-		                    }
+		                    }*/
 	                    ?>
                     </select> 
-                </p>
+                </p> -->
 
                 <p class="form-field lkpp_unit_id">
                     <label for="lkpp_unit_id"><?php _e( 'Unit Pengukuran', 'woocommerce' ); ?></label>
@@ -518,7 +518,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             else
                 delete_post_meta( $post_id, 'lkpp_product_category_id' );
 
-            if( isset( $_POST['lkpp_brand_id'] ) ) {
+            /*if( isset( $_POST['lkpp_brand_id'] ) ) {
                 update_post_meta( $post_id, 'lkpp_brand_id', $_POST['lkpp_brand_id'] );
                 $lkpp_brand = get_terms(
                     array(
@@ -537,7 +537,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 wp_set_post_terms( $post_id, $lkpp_brand_id, 'lkpp_product_brand' );
             }    
             else
-                delete_post_meta( $post_id, 'lkpp_brand_id' );
+                delete_post_meta( $post_id, 'lkpp_brand_id' );*/
 
             if( isset( $_POST['lkpp_unit_id'] ) ) {
                 update_post_meta( $post_id, 'lkpp_unit_id', $_POST['lkpp_unit_id'] );
