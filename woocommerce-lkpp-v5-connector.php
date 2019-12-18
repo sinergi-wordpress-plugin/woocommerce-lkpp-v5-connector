@@ -39,7 +39,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     define( 'LKPP_CONNECTOR', dirname( __FILE__ ) );
     
     add_action( 'after_setup_theme', 'create_lkpp_category_taxonomy');
-    add_action( 'after_setup_theme', 'create_lkpp_brand_taxonomy');
+    //add_action( 'after_setup_theme', 'create_lkpp_brand_taxonomy');
     add_action( 'after_setup_theme', 'create_lkpp_unit_taxonomy');
     add_action( 'init', 'render_panel');
     add_action( 'admin_enqueue_scripts', 'admin_scripts');
@@ -126,7 +126,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     * @since 0.0.2
     */
  
-    function create_lkpp_brand_taxonomy() {
+    /*function create_lkpp_brand_taxonomy() {
         
         // Manage Taxonomy Capabilities
         $capability = array(
@@ -171,7 +171,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         // register taxonomy to woocommerce product object
         register_taxonomy( 'lkpp_product_brand', 'product', $args );
         register_taxonomy_for_object_type( 'lkpp_product_brand', 'product' );
-    }
+    }*/
 
     /**
     * Add LKPP product brand taxonomies
