@@ -260,7 +260,7 @@ function get_lkpp_product($request){
 			$product_data['informasi']['id_kategori_produk_lkpp'] = (int)get_post_meta($product_id, 'lkpp_categ_id', true);
 			$product_data['informasi']['nama_produk'] = $product->get_name();
 			$product_data['informasi']['no_produk_penyedia'] = $product->get_sku();
-			$product_data['informasi']['id_manufaktur'] = (int)get_post_meta($product_id, 'lkpp_brand_id', true);
+			$product_data['informasi']['id_manufaktur'] = (int)get_lkpp_brand_id($product_id);
 			$product_data['informasi']['berlaku_sampai'] = get_post_meta($product_id, 'lkpp_expired_date', true);
 			$product_data['informasi']['id_unit_pengukuran_lkpp'] = (int)get_post_meta($product_id, 'lkpp_unit_id', true);
 			$product_data['informasi']['deskripsi_singkat'] = $product->get_short_description();
@@ -416,7 +416,7 @@ function map_product_data($data){
 		$product['informasi']['id_kategori_produk_lkpp'] = (int)get_post_meta($item_id, 'lkpp_categ_id', true);
 		$product['informasi']['nama_produk'] = $item->get_name();
 		$product['informasi']['no_produk_penyedia'] = $item->get_sku();
-		$product['informasi']['id_manufaktur'] = (int)get_post_meta($item_id, 'lkpp_brand_id', true);
+		$product['informasi']['id_manufaktur'] = (int)get_lkpp_brand_id($item_id);
 		$product['informasi']['berlaku_sampai'] = get_post_meta($item_id, 'lkpp_expired_date', true);
 		$product['informasi']['id_unit_pengukuran_lkpp'] = (int)get_post_meta($item_id, 'lkpp_unit_id', true);
 		$product['informasi']['deskripsi_singkat'] = $item->get_short_description();
@@ -485,6 +485,16 @@ function map_product_data($data){
 	}
 
 	return $products;
+}
+
+/**
+ * Get Post's LKPP Brand ID
+ */
+function get_lkpp_brand_id($item_id){
+	$term_list = wp_get_post_terms($item_id, 'product_brand', array("fields" => "ids"));
+	$term_id=$term_list[0];
+	$lkpp_brand_id = get_term_meta($term_id,'lkpp_brand_id',true);
+	return $lkpp_brand_id;
 }
 
 /**
