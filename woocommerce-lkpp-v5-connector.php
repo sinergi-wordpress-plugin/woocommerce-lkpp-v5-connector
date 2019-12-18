@@ -617,8 +617,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     function taxonomy_admin_scripts( $hook ) {
         if ( 'lkpp_page_lkpp-categ-page' == $hook || 'lkpp_page_lkpp-brand-page' == $hook || 'lkpp_page_lkpp-unit-page' == $hook ) {
             wp_enqueue_script( 'lcateg', plugin_dir_url( __FILE__ ) . 'assets/js/taxonomy-admin.js', array( 'jquery' ) );
-            //wp_enqueue_style( 'lhr', LHR_URL . '/assets/css/admin.css' );
-            //wp_enqueue_style( 'media-views' );
         }
     }
 
