@@ -21,7 +21,7 @@ class BrandListTable extends WP_List_Table {
         
         $columns = array();
         $columns['lkpp_id'] = __( 'LKPP ID', 'woocommerce' );
-        $columns['brand_name'] = __( 'LKPP Brand Name', 'woocommerce' );
+        $columns['brand_name'] = __( 'Brand Name', 'woocommerce' );
         $columns['count'] = __( 'Products', 'woocommerce' );
         
         return $columns;
