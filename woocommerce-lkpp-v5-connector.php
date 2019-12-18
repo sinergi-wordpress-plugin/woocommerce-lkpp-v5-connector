@@ -15,7 +15,7 @@
  * Plugin Name:       Woocommerce LKPP E-Catalogue V5 Connector
  * Plugin URI:        https://github.com/sinergi-wordpress-plugin/woocommerce-lkpp-v5-connector
  * Description:       Woocommerce connector for LKPP E-Catalogue V5
- * Version:           0.0.2
+ * Version:           1.0.1
  * Author:            Sinergi Creative
  * Author URI:        https://github.com/sinergi-wordpress-plugin
  * License:           GPL-3.0
@@ -39,7 +39,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     define( 'LKPP_CONNECTOR', dirname( __FILE__ ) );
     
     add_action( 'after_setup_theme', 'create_lkpp_category_taxonomy');
-    //add_action( 'after_setup_theme', 'create_lkpp_brand_taxonomy');
     add_action( 'after_setup_theme', 'create_lkpp_unit_taxonomy');
     add_action( 'init', 'render_panel');
     add_action( 'admin_enqueue_scripts', 'admin_scripts');
@@ -51,10 +50,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     add_action( 'wp_ajax_lunit_sync', 'lunit_sync');
     add_action( 'save_post', 'lkpp_save_metaboxdata', 10, 2 );
     add_action( 'admin_menu','lkpp_admin_settings_menu');
-    //add_action('restrict_manage_posts', 'restrict_listings_by_categ_lkpp');
-    //add_filter('parse_query', 'convert_id_to_lkpp_categ_in_query');
-    //add_action('restrict_manage_posts', 'restrict_listings_by_brand_lkpp');
-    //add_filter('parse_query', 'convert_id_to_lkpp_brand_in_query');
     require_once (LKPP_CONNECTOR . '/includes/api/lkpp-rest-controller-product.php');
 
     function render_panel() {
