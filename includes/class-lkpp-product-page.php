@@ -96,7 +96,7 @@ class ProductListTable extends WP_List_Table {
         $columns['lkpp_price'] = __( 'Harga LKPP', 'woocommerce' );
         $columns['lkpp_disc'] = __( 'Diskon LKPP', 'woocommerce' );
         $columns['lkpp_product_category'] = __( 'LKPP Category', 'woocommerce' );
-        $columns['lkpp_product_brand'] = __( 'LKPP Brand', 'woocommerce' );
+        $columns['lkpp_product_brand'] = __( 'Brand', 'woocommerce' );
         $columns['lkpp_unit'] = __( 'Satuan Unit', 'woocommerce' );
         $columns['lkpp_publish'] = __( 'Status', 'woocommerce' );
         
@@ -118,6 +118,7 @@ class ProductListTable extends WP_List_Table {
 
         $args = array(
             'lkpp_active'   => 'active',
+            'status'        => 'publish',
             'paginate'      => true,
             'limit'         => $per_page,
             'page'          => $current_page
@@ -241,8 +242,9 @@ class ProductListTable extends WP_List_Table {
      * Render LKPP Brand column
      */
     function column_lkpp_product_brand($item) {
-
-        $lkpp_brand_id = get_post_meta( $item->get_id(), 'lkpp_brand_id', true );
+        $term_list = wp_get_post_terms($item->get_id(), 'product_brand');
+        $term_name = $term_list[0]->name;
+        /*$lkpp_brand_id = get_post_meta( $item->get_id(), 'lkpp_brand_id', true );
 		if ( $lkpp_brand_id ) {
 		    $lkpp_brand = get_terms( array(
                 'hide_empty' => false, // also retrieve terms which are not used yet
@@ -256,8 +258,8 @@ class ProductListTable extends WP_List_Table {
                 )
             );
             $lkpp_brand_name = $lkpp_brand[0]->name;
-        }    
-        return $lkpp_brand_name ;    
+        }*/    
+        return $term_name ;    
     }
 
     /**
