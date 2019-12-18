@@ -56,7 +56,7 @@ class BrandListTable extends WP_List_Table {
         $term_query = new WP_Term_Query($args);
         $lkpp_brands = $term_query->terms;
 
-        $total_items  = count( get_terms( 'lkpp_product_brand', array('hide_empty'=>'0') ));
+        $total_items  = count( get_terms( 'product_brand', array('hide_empty'=>'0') ));
         
         $this->set_pagination_args( [
             'total_items' => $total_items, //WE have to calculate the total number of items
