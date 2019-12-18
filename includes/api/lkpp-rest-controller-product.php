@@ -207,11 +207,11 @@ function get_lkpp_product($request){
 				'status'		=> 'publish',
 				'sku'			=> $params['no_produk_penyedia']
 			);
-			//$product_id = wc_get_product_id_by_sku($params['no_produk_penyedia']);
 			$product = wc_get_products($args);
 			if(empty($product)){
 				return new WP_Error( 'product_not_found', 'Product Not Found!', array('status' => 404) );
 			}
+			$product_id = $product_id->get_id();
 			$product_data = array(
 				'informasi'		=> array(
 					'unspsc' => '',
