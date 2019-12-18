@@ -211,7 +211,7 @@ function get_lkpp_product($request){
 			if(empty($product)){
 				return new WP_Error( 'product_not_found', 'Product Not Found!', array('status' => 404) );
 			}
-			$product_id = $product->get_id();
+			$product_id = $product[0]->get_id();
 			$product_data = array(
 				'informasi'		=> array(
 					'unspsc' => '',
