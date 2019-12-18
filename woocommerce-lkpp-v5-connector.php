@@ -866,17 +866,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
                 $woo_brands_names[] = $woo_brand_name;
             }
 
+            $search_woo_brands_names = array_map('strtolower', $woo_brands_names);
+
             foreach($lkpp_brands as $lkpp_brand){
                 if(!in_array($lkpp_brand['id'], $woo_brands_lkpp_ids)){
-                    if(in_array($lkpp_brand['nama_manufaktur'], $woo_brands_names)){
+                    if(in_array(strtolower($lkpp_brand['nama_manufaktur']), $search_woo_brands_names)){
                         
                         /** Get Woocommerce Brand id */
-                        /*$term_query = new WP_Term_Query(array(
-                            'taxonomy' => 'product_brand',
-                            'hide_empty'    => false,
-                            'name__like'  => $lkpp_brand['nama_manufaktur']
-                        ));*/
-                        //$term = $term_query->terms[0];
                         $term = get_term_by('name', $lkpp_brand['nama_manufaktur'], 'product_brand');
                         $woo_brand_id = $term->term_id;
                         /** End of Get Woocommerce Brand id */
@@ -901,6 +897,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
             );
     
             wp_send_json( $output );
+
         } else {
             $output = array(
                 'message'  => 'failed'
