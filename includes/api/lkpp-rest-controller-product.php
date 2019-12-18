@@ -202,8 +202,13 @@ function get_lkpp_product($request){
 		return new WP_Error( 'invalid_secret', 'Invalid secret Key', array('status' => 403) );
 	} else {
 		if(isset($params['no_produk_penyedia']) && !empty($params['no_produk_penyedia'])){
-			$product_id = wc_get_product_id_by_sku($params['no_produk_penyedia']);
-			$product = wc_get_product($product_id);
+			$args = array(
+				'lkpp_active'	=> 'active',
+				'status'		=> 'publish',
+				'sku'			=> $params['no_produk_penyedia']
+			);
+			//$product_id = wc_get_product_id_by_sku($params['no_produk_penyedia']);
+			$product = wc_get_products($args);
 			if(empty($product)){
 				return new WP_Error( 'product_not_found', 'Product Not Found!', array('status' => 404) );
 			}
