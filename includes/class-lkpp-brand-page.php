@@ -42,7 +42,7 @@ class BrandListTable extends WP_List_Table {
         $offset = $per_page * ( $current_page - 1);
 
         $args = array(
-            'taxonomy'      => 'lkpp_product_brand',
+            'taxonomy'      => 'product_brand',
             'number'        => $per_page,
             'offset'        => $offset,
             'hide_empty'    => false
