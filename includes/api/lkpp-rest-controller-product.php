@@ -80,6 +80,7 @@ function get_all_lkpp_product($request){
 	} else {
 		$args = array(
 			'lkpp_active'	=> 'active',
+			'status'		=> 'publish',
 			'paginate'		=> true,
 			'limit'			=> 500,
 			'page'			=> 1,
@@ -139,6 +140,7 @@ function get_updated_lkpp_product($request){
 	} else {
 		$args = array(
 			'lkpp_active'	=> 'active',
+			'status'		=> 'publish',
 			'paginate'		=> true,
 			'limit'			=> 500,
 			'page'			=> 1,
